@@ -3,4 +3,6 @@ class WhiteCard < ActiveRecord::Base
 
   belongs_to :deck
   belongs_to :hand
+
+  validates :content, :deck, presence: true
 end
