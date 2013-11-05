@@ -7,6 +7,7 @@
     <th>Game Name</th>
     <th># of Players</th>
     <th>Max # of Players</th>
+    <th>Join Game</th>
   </tr>
 
 <% @games.each do |game| %>
@@ -14,6 +15,7 @@
     <td><%= link_to game.name, game %></td>
     <td><%= game.players %></td>
     <td><%= game.max_players %></td>
+    <td><%= link_to "Join", "", class: "btn btn-primary" %></td>
   </tr>
 <% end %>
 </table>
