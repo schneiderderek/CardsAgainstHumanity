@@ -4,16 +4,15 @@
 
 <table class="table table-striped table-hover">
   <tr>
-    <th>Game ID#</th>
-    <th></th>
-    <th></th>
+    <th>Game Name</th>
+    <th># of Players</th>
   </tr>
 
 <% @games.each do |game| %>
   <tr>
-    <td><%= link_to 'Show', game %></td>
-    <td><%= link_to 'Edit', edit_game_path(game) %></td>
-    <td><%= link_to 'Destroy', game, method: :delete, data: { confirm: 'Are you sure?' } %></td>
+    <td><%= link_to game.name, game %></td>
+    <!-- <td><%= link_to 'Edit', edit_game_path(game) %></td> -->
+    <!-- <td><%= link_to 'Destroy', game, method: :delete, data: { confirm: 'Are you sure?' } %></td> -->
   </tr>
 <% end %>
 </table>
