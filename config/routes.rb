@@ -1,4 +1,7 @@
 CardsAgainstHumanity::Application.routes.draw do
+  resources :hands
+
+
   resources :decks
   resources :games, except: [:edit, :update, :destroy]
 
