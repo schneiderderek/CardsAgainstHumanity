@@ -16,3 +16,7 @@
 body {
   color: black;
 }
+
+.navbar {
+  opacity: .9;
+}
