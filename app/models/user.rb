@@ -8,5 +8,6 @@ class User < ActiveRecord::Base
   attr_accessible :email, :password, :password_confirmation, :remember_me,
     :wins, :points
 
+  has_many :games, through: :hands
   has_many :decks
 end

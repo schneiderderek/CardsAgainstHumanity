@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20131105035453) do
+ActiveRecord::Schema.define(:version => 20131105192756) do
 
   create_table "decks", :force => true do |t|
     t.string   "name"
@@ -30,6 +30,13 @@ ActiveRecord::Schema.define(:version => 20131105035453) do
     t.string   "name",        :default => ""
     t.integer  "max_players", :default => 20
     t.boolean  "finished",    :default => false
+  end
+
+  create_table "hands", :force => true do |t|
+    t.datetime "created_at", :null => false
+    t.datetime "updated_at", :null => false
+    t.integer  "user_id"
+    t.integer  "game_id"
   end
 
   create_table "users", :force => true do |t|
