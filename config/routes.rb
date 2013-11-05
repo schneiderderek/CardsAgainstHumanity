@@ -1,4 +1,10 @@
 CardsAgainstHumanity::Application.routes.draw do
+  resources :black_cards
+
+
+  resources :white_cards
+
+
   resources :hands
 
 
