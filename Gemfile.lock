@@ -31,8 +31,6 @@ GEM
     arel (3.0.2)
     atomic (1.1.14)
     bcrypt-ruby (3.1.2)
-    bootstrap-sass (2.2.2.0)
-      sass (~> 3.2)
     builder (3.0.4)
     coffee-rails (3.2.2)
       coffee-script (>= 2.2.0)
@@ -49,10 +47,6 @@ GEM
       warden (~> 1.2.3)
     erubis (2.7.0)
     execjs (2.0.2)
-    flatui-rails (0.0.4)
-      bootstrap-sass (= 2.2.2)
-      railties (>= 3.1)
-      sass-rails (>= 3.2.0)
     hike (1.2.3)
     i18n (0.6.1)
     journey (1.0.4)
@@ -128,7 +122,6 @@ PLATFORMS
 DEPENDENCIES
   coffee-rails (~> 3.2.1)
   devise
-  flatui-rails
   jquery-rails
   rails (= 3.2.13)
   sass-rails (~> 3.2.3)
