@@ -14,6 +14,7 @@
 ActiveRecord::Schema.define(:version => 20131105013959) do
 
   create_table "games", :force => true do |t|
+    t.integer  "players"
     t.datetime "created_at", :null => false
     t.datetime "updated_at", :null => false
   end
@@ -31,6 +32,7 @@ ActiveRecord::Schema.define(:version => 20131105013959) do
     t.string   "last_sign_in_ip"
     t.datetime "created_at",                             :null => false
     t.datetime "updated_at",                             :null => false
+    t.integer  "game_id"
   end
 
   add_index "users", ["email"], :name => "index_users_on_email", :unique => true
