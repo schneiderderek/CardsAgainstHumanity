@@ -1,7 +1,5 @@
 CardsAgainstHumanity::Application.routes.draw do
   resources :decks
-
-
   resources :games, except: [:edit, :update, :destroy]
 
   devise_for :users
