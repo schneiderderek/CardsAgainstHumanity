@@ -37,7 +37,15 @@ class GamesController < ApplicationController
   # POST /games
   # POST /games.json
   def create
-    @game = Game.new(params[:game])
+    attributes = params[:game]
+    deck_id = attributes.delete(:deck)
+    @game = Game.new(attributes)
+
+    # Needs to be cleaned up to handle exceptions and nil
+    @game.deck = Deck.find(deck_id).dup if deck_id
+    @game.deck.save
+
+    # Copy deck selected and set game_id of new deck
 
     respond_to do |format|
       if @game.save

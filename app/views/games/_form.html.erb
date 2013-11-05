@@ -24,6 +24,10 @@
   </div>
 
   <div class="form-group">
+    <%= f.select :deck, Deck.where(game_id: nil).collect {|d| [ d.name, d.id ] } %>
+  </div>
+
+  <div class="form-group">
     <%= f.submit "Start a New Game", class: "btn btn-default" %>
   </div>
 <% end %>
