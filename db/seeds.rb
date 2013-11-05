@@ -5,3 +5,10 @@
 #
 #   cities = City.create([{ name: 'Chicago' }, { name: 'Copenhagen' }])
 #   Mayor.create(name: 'Emanuel', city: cities.first)
+
+# Create a Default deck
+Deck.create(name: :Default, user: nil, game: nil)
+
+# Create all white cards associated with this deck
+
+# Create all black cards associated with the default deck
