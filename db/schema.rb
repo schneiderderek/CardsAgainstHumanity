@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20131106063454) do
+ActiveRecord::Schema.define(:version => 20131106182811) do
 
   create_table "black_cards", :force => true do |t|
     t.datetime "created_at", :null => false
@@ -25,7 +25,6 @@ ActiveRecord::Schema.define(:version => 20131106063454) do
     t.string   "name"
     t.datetime "created_at", :null => false
     t.datetime "updated_at", :null => false
-    t.integer  "user_id"
     t.integer  "game_id"
   end
 

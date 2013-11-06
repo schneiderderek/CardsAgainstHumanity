@@ -5,4 +5,11 @@ class WhiteCard < ActiveRecord::Base
   belongs_to :hand
 
   validates :content, :deck, presence: true
+
+  def duplicate_for(new_deck)
+    white_card = self.dup
+    white_card.deck = new_deck
+    white_card.hand = nil
+    white_card.save
+  end
 end

@@ -42,8 +42,6 @@ class DecksController < ApplicationController
   def create
     @deck = Deck.new(params[:deck])
 
-    @deck.user_id = current_user.id if current_user
-
     respond_to do |format|
       if @deck.save
         format.html { redirect_to @deck, notice: 'Deck was successfully created.' }
