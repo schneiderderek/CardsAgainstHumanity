@@ -1,6 +1,7 @@
 class Game < ActiveRecord::Base
   attr_accessible :players, :name, :max_players, :finished, 
     :deck, :users, :hands
+  attr_protected :original_deck_id
   
   has_one :deck
   has_many :users
@@ -8,11 +9,10 @@ class Game < ActiveRecord::Base
 
   validates :name, :max_players, :deck, presence: true
 
-  before_create :initialize_game_components!
+  after_create :initialize_game_components!
 
   def initialize_game_components!
-    self.deck = self.deck.dup
-    self.deck.save
-    hand = Hand.new(game_id: self.id)
+    self.deck.duplicate_for_game(self.original_deck_id)
+    self.hands.new(game: self).save
   end
 end

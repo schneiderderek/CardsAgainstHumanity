@@ -7,7 +7,7 @@
 #   Mayor.create(name: 'Emanuel', city: cities.first)
 
 # Create a Default deck
-Deck.create(name: :Default, user: nil, game: nil)
+Deck.create(name: :Default, game: nil)
 
 # Create all white cards associated with this deck
 

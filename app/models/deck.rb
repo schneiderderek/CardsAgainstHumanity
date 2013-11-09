@@ -8,14 +8,9 @@ class Deck < ActiveRecord::Base
 
   validates :name, presence: true
 
-  before_create :duplicate_for_game
-
-  def duplicate_for_game
-    # asdasd
-    deck = self.dup
-    deck.game = new_game
-    deck.white_cards.each { |c| c.duplicate_for(deck) } 
-    deck.black_cards.each { |c| c.duplicate_for(deck) }
-    deck.save
+  def duplicate_for_game(original_deck_id)
+    original_deck = Deck.find(original_deck_id)
+    original_deck.white_cards.each { |c| c.duplicate_for self } 
+    original_deck.black_cards.each { |c| c.duplicate_for self }
   end
 end

@@ -37,10 +37,11 @@ class GamesController < ApplicationController
   # POST /games
   # POST /games.json
   def create
-    deck_id = params[:game].delete(:deck)
+    deck = Deck.find(params[:game].delete(:deck))
     @game = Game.new(params[:game])
-    @game.deck = Deck.find(deck_id) if deck_id
-
+    @game.original_deck_id = deck.id
+    @game.deck = deck.dup
+ 
     respond_to do |format|
       if @game.save
         format.html { redirect_to @game, notice: 'Game was successfully created.' }
