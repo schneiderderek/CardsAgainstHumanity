@@ -10,8 +10,9 @@
 d = Deck.create(name: :Default, game: nil)
 
 # Create all white cards associated with this deck
-WhiteCard.create(content: "White Card 1", deck: d)
-WhiteCard.create(content: "White Card 2", deck: d)
+File.read("#{Dir.pwd}/db/seed_files/white_cards.txt").split(/[.]/).each do |x|
+  WhiteCard.create(content: x.gsub(/[\W+]/, " ").strip, deck: d)
+end
 
 # Create all black cards associated with the default deck
 BlackCard.create(content: "Black Card 1", deck: d)
