@@ -3,7 +3,7 @@ class User < ActiveRecord::Base
          :recoverable, :rememberable, :trackable, :validatable
 
   attr_accessible :email, :password, :password_confirmation, :remember_me,
-    :wins, :points, :games, :decks, :hands
+    :wins, :points, :games, :decks, :hands, :game_id
 
   has_many :hands
   has_many :games, through: :hands

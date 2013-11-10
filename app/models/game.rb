@@ -5,7 +5,8 @@ class Game < ActiveRecord::Base
   
   has_one :deck
   has_many :users
-  has_many :hands, through: :users
+  has_many :users, through: :hands
+  has_many :hands
 
   validates :name, :max_players, :deck, presence: true
 
