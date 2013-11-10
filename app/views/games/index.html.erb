@@ -15,7 +15,7 @@
     <td><%= link_to game.name, game %></td>
     <td><%= game.players %></td>
     <td><%= game.max_players %></td>
-    <td><%= link_to "Join", "", class: "btn btn-primary" %></td>
+    <td><%= link_to "Join", new_hand_path(user: current_user.id, game: game.id), class: "btn btn-primary" %></td>
   </tr>
 <% end %>
 </table>

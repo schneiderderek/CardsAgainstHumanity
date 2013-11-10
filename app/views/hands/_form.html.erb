@@ -11,7 +11,10 @@
     </div>
   <% end %>
 
+  <%= f.hidden_field :game, value: params[:game] %>
+  <%= f.hidden_field :user, value: params[:user] %>
+
   <div class="actions">
-    <%= f.submit %>
+    <%= f.submit "Join Game", class: "btn btn-primary" %>
   </div>
 <% end %>

@@ -32,19 +32,18 @@ class HandsController < ApplicationController
     end
   end
 
-  # GET /hands/1/edit
-  def edit
-    @hand = Hand.find(params[:id])
-  end
-
   # POST /hands
   # POST /hands.json
   def create
+    user_id = params[:hand].delete(:user) if params[:hand][:user]
+    game_id = params[:hand].delete(:game)
     @hand = Hand.new(params[:hand])
+    @hand.user = User.find(user_id) if user_id
+    @hand.game = Game.find(game_id) 
 
     respond_to do |format|
       if @hand.save
-        format.html { redirect_to @hand, notice: 'Hand was successfully created.' }
+        format.html { redirect_to @hand.game, notice: 'Welcome to the game!' }
         format.json { render json: @hand, status: :created, location: @hand }
       else
         format.html { render action: "new" }

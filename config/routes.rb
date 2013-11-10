@@ -1,7 +1,7 @@
 CardsAgainstHumanity::Application.routes.draw do
   resources :black_cards
   resources :white_cards
-  resources :hands
+  resources :hands, except: [:edit]
   resources :decks
   resources :games, except: [:edit, :update, :destroy]
 
