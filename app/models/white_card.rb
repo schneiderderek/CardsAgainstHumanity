@@ -1,5 +1,5 @@
 class WhiteCard < ActiveRecord::Base
-  attr_accessible :content, :deck, :hand, :deck_id, :hand_id
+  attr_accessible :content, :deck, :hand
 
   belongs_to :deck
   belongs_to :hand
