@@ -14,5 +14,6 @@ class Game < ActiveRecord::Base
   def initialize_game_components!
     self.deck.duplicate_for_game(self.original_deck_id)
     self.hands.new(game: self).save
+    self.hands.new(game: self, user: current_user).save
   end
 end
