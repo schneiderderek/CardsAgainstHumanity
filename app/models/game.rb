@@ -4,9 +4,8 @@ class Game < ActiveRecord::Base
   attr_protected :original_deck_id
   
   has_one :deck
-  has_many :users
-  has_many :users, through: :hands
   has_many :hands
+  has_many :users, through: :hands
 
   validates :name, :max_players, :deck, presence: true
 
