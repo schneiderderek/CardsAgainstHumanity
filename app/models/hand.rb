@@ -6,4 +6,16 @@ class Hand < ActiveRecord::Base
   has_many :white_cards
 
   validates :game, presence: true
+
+  after_save :populate_hand!
+
+  private
+
+  def populate_hand!
+    self.game.deck.white_cards.to_a.sample(10 - self.white_cards.count).each do |card|
+      card.deck = nil
+      card.hand = self
+      card.save
+    end
+  end
 end
