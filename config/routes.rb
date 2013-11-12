@@ -1,9 +1,14 @@
 CardsAgainstHumanity::Application.routes.draw do
-  resources :black_cards
-  resources :white_cards
-  resources :hands, except: [:edit]
+
+  resources :games, except: [:edit, :update, :destroy], shallow: true do
+    resources :hands, except: [:edit]
+    resources :decks, shallow: true  do 
+      resources :black_cards
+      resources :white_cards
+    end
+  end
+
   resources :decks
-  resources :games, except: [:edit, :update, :destroy]
 
   devise_for :users
 

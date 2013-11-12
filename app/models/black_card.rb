@@ -3,7 +3,8 @@ class BlackCard < ActiveRecord::Base
   attr_readonly :num_blanks
 
   belongs_to :deck
-
+  belongs_to :game 
+  
   before_validation :set_num_blanks!
 
   validates :content, :deck, presence: true

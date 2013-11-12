@@ -9,14 +9,14 @@
   <tr><th>Name</th><th>Name</th><th>Name</th></tr>
 
   <% cards = @game.deck.white_cards %>
-
-  <% for x in 0...(cards.length - 2) %>
-  <tr>
+  <% x = 0 %>
+  <% while x < cards.length %>
+  <% if x % 3 == 0 %><tr><% end %>
     <td><%= cards[x].content %></td>
-    <td><%= cards[x+=1].content %></td>
-    <td><%= cards[x+=1].content %></td>
-  </tr>
+  <% if x % 3 == 2 %></tr><% end %>
+  <% x+= 1 %>
   <% end %>
+
 
 </table>
 <br>
@@ -24,13 +24,12 @@
   <tr><th>Name</th><th>Name</th><th>Name</th></tr>
 
   <% cards = @game.deck.black_cards %>
-
-  <% for x in 0...(cards.length - 2) %>
-  <tr>
+  <% x = 0 %>
+  <% while x < cards.length %>
+  <% if x % 3 == 0 %><tr><% end %>
     <td><%= cards[x].content %></td>
-    <td><%= cards[x+=1].content %></td>
-    <td><%= cards[x+=1].content %></td>
-  </tr>
+  <% if x % 3 == 2 %></tr><% end %>
+  <% x+= 1 %>
   <% end %>
 </table>
 <br>
