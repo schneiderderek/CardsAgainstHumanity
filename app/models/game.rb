@@ -3,6 +3,7 @@ class Game < ActiveRecord::Base
     :deck, :users, :hands
   attr_protected :original_deck_id
   
+  has_one :black_card
   has_one :deck
   has_many :hands
   has_many :users, through: :hands
