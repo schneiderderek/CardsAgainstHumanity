@@ -15,5 +15,6 @@ File.read("#{Dir.pwd}/db/seed_files/white_cards.txt").split(/[.]/).each do |x|
 end
 
 # Create all black cards associated with the default deck
-BlackCard.create(content: "Black Card 1", deck: d)
-BlackCard.create(content: "Black Card 2", deck: d)
+File.read("#{Dir.pwd}/db/seed_files/black_cards.txt").split(/[\n]/).each do |x|
+  BlackCard.create(content: x, deck: d)
+end

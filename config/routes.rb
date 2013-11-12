@@ -2,13 +2,13 @@ CardsAgainstHumanity::Application.routes.draw do
 
   resources :games, except: [:edit, :update, :destroy], shallow: true do
     resources :hands, except: [:edit]
-    resources :decks, shallow: true  do 
-      resources :black_cards
-      resources :white_cards
-    end
   end
 
-  resources :decks
+  # Decks and cards will be seeded in the db for now.
+  resources :decks, except: [:create, :new, :edit, :update], shallow: true  do 
+    resources :black_cards, except: [:create, :new, :edit, :update]
+    resources :white_cards, except: [:create, :new, :edit, :update]
+  end
 
   devise_for :users
 

@@ -4,7 +4,7 @@ class BlackCard < ActiveRecord::Base
 
   belongs_to :deck
   belongs_to :game 
-  
+
   before_validation :set_num_blanks!
 
   validates :content, :deck, presence: true
@@ -30,5 +30,6 @@ class BlackCard < ActiveRecord::Base
   def set_num_blanks!
     self.num_blanks = 0
     self.content.split(/ /).each { |s| self.num_blanks+= 1 if s.count("_") > 0 }
+    self.num_blanks = 1 if self.num_blanks == 0
   end
 end
