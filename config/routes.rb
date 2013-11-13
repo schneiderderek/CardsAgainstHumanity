@@ -1,16 +1,11 @@
 CardsAgainstHumanity::Application.routes.draw do
-
-  resources :games, except: [:edit, :update, :destroy], shallow: true do
-    resources :hands, except: [:edit]
-  end
-
-  # Decks and cards will be seeded in the db for now.
-  resources :decks, except: [:create, :new, :edit, :update], shallow: true  do 
-    resources :black_cards, except: [:create, :new, :edit, :update]
-    resources :white_cards, except: [:create, :new, :edit, :update]
-  end
-
   devise_for :users
+
+  resources :games, except: [:edit, :update, :destroy] do
+    resources :users, only: [:index, :show] do 
+      resources :hands
+    end
+  end
 
   # The priority is based upon order of creation:
   # first created -> highest priority.

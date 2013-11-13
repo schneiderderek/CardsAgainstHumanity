@@ -1,8 +1,6 @@
 class HandsController < ApplicationController
-  # GET /hands
-  # GET /hands.json
   def index
-    @hands = Hand.all
+    @hands = Hand.where(game_id: params[:game_id], user_id: params[:user_id])
 
     respond_to do |format|
       format.html # index.html.erb
@@ -10,8 +8,6 @@ class HandsController < ApplicationController
     end
   end
 
-  # GET /hands/1
-  # GET /hands/1.json
   def show
     @hand = Hand.find(params[:id])
 
@@ -21,8 +17,6 @@ class HandsController < ApplicationController
     end
   end
 
-  # GET /hands/new
-  # GET /hands/new.json
   def new
     @hand = Hand.new
 
@@ -32,8 +26,6 @@ class HandsController < ApplicationController
     end
   end
 
-  # POST /hands
-  # POST /hands.json
   def create
     user_id = params[:hand].delete(:user) if params[:hand][:user]
     game_id = params[:hand].delete(:game)
@@ -52,8 +44,6 @@ class HandsController < ApplicationController
     end
   end
 
-  # PUT /hands/1
-  # PUT /hands/1.json
   def update
     @hand = Hand.find(params[:id])
 
@@ -68,8 +58,6 @@ class HandsController < ApplicationController
     end
   end
 
-  # DELETE /hands/1
-  # DELETE /hands/1.json
   def destroy
     @hand = Hand.find(params[:id])
     @hand.destroy

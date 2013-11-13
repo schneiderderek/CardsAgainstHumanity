@@ -41,7 +41,9 @@ class GamesController < ApplicationController
     @game = Game.new(params[:game])
     @game.original_deck_id = deck.id
     @game.deck = deck.dup
- 
+
+    @game.hands.new(game: @game, user: current_user).save
+
     respond_to do |format|
       if @game.save
         format.html { redirect_to @game, notice: 'Game was successfully created.' }
