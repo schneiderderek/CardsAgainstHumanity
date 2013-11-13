@@ -1,7 +1,7 @@
-# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/Fixtures.html
+default:
+   id: 1
+   name: Default
 
 one:
-  name: MyString
-
-two:
-  name: MyString
+   id: 2
+   name: Deck 1
