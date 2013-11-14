@@ -48,10 +48,12 @@ class GamesController < ApplicationController
   def hand
     @game = Game.find(params[:id])
     @card = WhiteCard.find(params[:card_id])
+    @user_hand = @card.hand
     @card.hand = @game.hands.where(user_id: nil).first
-
+    
     respond_to do |format|
       if @card.save
+        @user_hand.save
         format.json { render json: {}, status: :ok }
       else
         format.json { render json: {}, status: :unprocessable_entity }
