@@ -9,7 +9,7 @@
 # Create a Default deck
 d = Deck.create(name: :Default, game: nil)
 
-# Create all white cards associated with this deck
+# Create all white cards associated with the default deck
 File.read("#{Dir.pwd}/db/seed_files/white_cards.txt").split(/[\n]/).each do |x|
   WhiteCard.create(content: x.strip, deck: d)
 end
