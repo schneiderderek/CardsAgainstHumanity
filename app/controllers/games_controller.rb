@@ -16,6 +16,8 @@ class GamesController < ApplicationController
   # GET /games/1.json
   def show
     @game = Game.find(params[:id])
+    cookies[:user_id] = current_user.id
+    cookies[:game_id] = @game.id
 
     respond_to do |format|
       format.html # show.html.erb
@@ -42,7 +44,7 @@ class GamesController < ApplicationController
     @game.original_deck_id = deck.id
     @game.deck = deck.dup
 
-    @game.hands.new(game: @game, user: current_user).save
+    Hand.new(game: @game, user: current_user).save
 
     respond_to do |format|
       if @game.save

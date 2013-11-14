@@ -1,19 +1,4 @@
-<%= form_for(@hand) do |f| %>
-  <% if @hand.errors.any? %>
-    <div id="error_explanation">
-      <h2><%= pluralize(@hand.errors.count, "error") %> prohibited this hand from being saved:</h2>
-
-      <ul>
-      <% @hand.errors.full_messages.each do |msg| %>
-        <li><%= msg %></li>
-      <% end %>
-      </ul>
-    </div>
-  <% end %>
-
-  <%= f.hidden_field :game, value: params[:game] %>
-  <%= f.hidden_field :user, value: params[:user] %>
-
+<%= form_for(@hand, url: game_user_hands_path(@game, @user)) do |f| %>
   <div class="actions">
     <%= f.submit "Join Game", class: "btn btn-primary" %>
   </div>

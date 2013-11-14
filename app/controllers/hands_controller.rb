@@ -13,12 +13,14 @@ class HandsController < ApplicationController
 
     respond_to do |format|
       format.html # show.html.erb
-      format.json { render json: @hand }
+      format.json { render json: @hand.white_cards }
     end
   end
 
   def new
     @hand = Hand.new
+    @game = Game.find(params[:game_id])
+    @user = User.find(params[:user_id])
 
     respond_to do |format|
       format.html # new.html.erb
@@ -27,11 +29,9 @@ class HandsController < ApplicationController
   end
 
   def create
-    user_id = params[:hand].delete(:user) if params[:hand][:user]
-    game_id = params[:hand].delete(:game)
-    @hand = Hand.new(params[:hand])
-    @hand.user = User.find(user_id) if user_id
-    @hand.game = Game.find(game_id) 
+    @hand = Hand.new
+    @hand.user = User.find(params[:user_id])
+    @hand.game = Game.find(params[:game_id])
 
     respond_to do |format|
       if @hand.save

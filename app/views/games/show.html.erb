@@ -2,36 +2,7 @@
   <h1><%= @game.name %> <small><%= pluralize(@game.users.count, "player") %> game</small></h1>
 </div>
 
-<h2>Deck: <%= @game.deck.name %></h2>
-<br>
-<h2>White Cards:</h2>
-<table class="table table-striped table-hover">
-  <tr><th>Name</th><th>Name</th><th>Name</th></tr>
-
-  <% cards = @game.deck.white_cards %>
-  <% x = 0 %>
-  <% while x < cards.length %>
-  <% if x % 3 == 0 %><tr><% end %>
-    <td><%= cards[x].content %></td>
-  <% if x % 3 == 2 %></tr><% end %>
-  <% x+= 1 %>
-  <% end %>
-
-
-</table>
-<br>
-<table class="table table-striped table-hover">
-  <tr><th>Name</th><th>Name</th><th>Name</th></tr>
-
-  <% cards = @game.deck.black_cards %>
-  <% x = 0 %>
-  <% while x < cards.length %>
-  <% if x % 3 == 0 %><tr><% end %>
-    <td><%= cards[x].content %></td>
-  <% if x % 3 == 2 %></tr><% end %>
-  <% x+= 1 %>
-  <% end %>
-</table>
-<br>
+<div id="player-hand">
+</div>
 
 <%= link_to 'Back', games_path %>

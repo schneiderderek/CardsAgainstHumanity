@@ -16,6 +16,6 @@ class Hand < ActiveRecord::Base
       card.deck = nil
       card.hand = self
       card.save
-    end
+    end if self.user
   end
 end
