@@ -1,6 +1,18 @@
 #player-hand {
-  margin-left: auto;
-  margin-right: auto;
   width: 100%;
   overflow: auto;
+}
+
+#game-content {
+  width: 100%;
+}
+
+#game-black-card {
+  width: 25%;
+  float: left;
+}
+
+#game-hand {
+  width: 75%;
+  float: left;
 }

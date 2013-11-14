@@ -25,6 +25,14 @@ class GamesController < ApplicationController
     end
   end
 
+  def black_card
+    @game = Game.find(params[:id])
+
+    respond_to do |format|
+      format.json {render json: @game.black_card}
+    end
+  end
+
   # GET /games/new
   # GET /games/new.json
   def new

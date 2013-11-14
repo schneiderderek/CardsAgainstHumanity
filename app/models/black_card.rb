@@ -7,7 +7,7 @@ class BlackCard < ActiveRecord::Base
 
   before_validation :set_num_blanks!
 
-  validates :content, :deck, presence: true
+  validates :content, presence: true
   validate :validate_content
 
 

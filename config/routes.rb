@@ -5,6 +5,10 @@ CardsAgainstHumanity::Application.routes.draw do
     resources :users, only: [:index, :show] do 
       resources :hands
     end
+
+    member do 
+      get 'black_card'
+    end
   end
 
   # The priority is based upon order of creation:

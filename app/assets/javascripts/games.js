@@ -1,6 +1,7 @@
 $.ajax({
   url: document.URL + ".json",
   success: function(game_data, game_textStatus, game_jqXHR) {
+    // Fill in user's hand
     $.ajax({
       url: document.URL + "/users/" + $.cookie("user_id") + "/hands.json",
       success: function(hands_data, hands_textStatus, hands_jqXHR) {
@@ -9,22 +10,29 @@ $.ajax({
           url: document.URL + "/users/" + $.cookie("user_id") + "/hands/" + hands_data[0]["id"] + ".json",
           success: function(hand_data, hand_textStatus, hand_jqXHR) {
             for (var i = 0; i < hand_data.length; i++) {
-              generateCard(hand_data[i]['content']);
+              generateCard(hand_data[i]['content'], 'white', 'player');
             }
           }
         });        
       }
     });
+
+    // Get the Black card for the game
+    $.ajax({
+      url: document.URL + "/black_card.json",
+      success: function(card_data, card_textStatus, card_jqXHR) {
+        generateCard(card_data['content'], 'black', 'game')
+      }
+    });
+
   }
 });
 
 
-function generateCard(text) {
+function generateCard(text, color, hand) {
   var card_div = document.createElement("div");
-  var inner_text_el = document.createElement("p");
-  inner_text_el.innerText = text
-  card_div.setAttribute("class", "white-card");
-  card_div.appendChild(inner_text_el);
+  card_div.innerText = text
+  card_div.setAttribute("class", color + '-card');
 
-  document.getElementById("player-hand").appendChild(card_div);
+  document.getElementById(hand + "-hand").appendChild(card_div);
 }
