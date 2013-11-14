@@ -1,42 +1,49 @@
+// Fill in the users hand
 $.ajax({
-  url: document.URL + ".json",
-  success: function(game_data, game_textStatus, game_jqXHR) {
-    // Fill in user's hand
-    $.ajax({
-      url: document.URL + "/users/" + $.cookie("user_id") + "/hands.json",
-      success: function(hands_data, hands_textStatus, hands_jqXHR) {
-        console.warn(document.URL + "/users/" + $.cookie("user_id") + "/hands/" + hands_data[0]["id"] + ".json")
-        $.ajax({
-          url: document.URL + "/users/" + $.cookie("user_id") + "/hands/" + hands_data[0]["id"] + ".json",
-          success: function(hand_data, hand_textStatus, hand_jqXHR) {
-            for (var i = 0; i < hand_data.length; i++) {
-              generateCard(hand_data[i]['content'], 'white', 'player');
+  url: document.URL + "/users/" + $.cookie("user_id") + "/hand.json",
+  success: function(hand_data, hand_textStatus, hand_jqXHR) {
+    $(document).ready(function(){
+      for (var i = 0; i < hand_data.length; i++) {
+        generateCard(hand_data[i], 'white', 'player');
+      }
+
+      $('.white-card').click(function() {
+        if (confirm("Are you sure you want to choose this card?")) {
+          $.ajax({
+            url: document.URL + "/hand.json?card_id=" + $(this).attr('card-id'),
+            type: 'POST',
+            success: function(select_data, select_textStatus, select_jqXHR) {
+              console.warn(select_data);
+            },
+            error: function() {
+              console.error("REQUEST FAILED")
             }
-          }
-        });        
-      }
+          });
+        }
+      });
     });
-
-    // Get the Black card for the game
-    $.ajax({
-      url: document.URL + "/black_card.json",
-      success: function(card_data, card_textStatus, card_jqXHR) {
-        var card_div = document.createElement('div');
-        card_div.innerText = card_data['content']
-        card_div.setAttribute('class', 'black-card');
-
-        document.getElementById('game-content').insertBefore(card_div, document.getElementById('game-content').firstChild)
-      }
-    });
-
   }
 });
 
+// Get the Black card for the game
+$.ajax({
+  url: document.URL + "/black_card.json",
+  success: function(card_data, card_textStatus, card_jqXHR) {
+    $(document).ready(function(){
+      var card_div = document.createElement('div');
+      card_div.innerText = card_data['content'];
+      card_div.setAttribute('class', 'black-card');
 
-function generateCard(text, color, hand) {
+      document.getElementById('game-content').insertBefore(card_div, document.getElementById('game-content').firstChild);
+    });
+  }
+});
+
+function generateCard(card, color, hand) {
   var card_div = document.createElement("div");
-  card_div.innerText = text
+  card_div.innerText = card['content'];
   card_div.setAttribute("class", color + '-card');
+  card_div.setAttribute("card-id", card['id']);
 
   document.getElementById(hand + "-hand").appendChild(card_div);
 }

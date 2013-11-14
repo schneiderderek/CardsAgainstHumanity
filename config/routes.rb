@@ -4,10 +4,15 @@ CardsAgainstHumanity::Application.routes.draw do
   resources :games, except: [:edit, :update, :destroy] do
     resources :users, only: [:index, :show] do 
       resources :hands
+
+      member do
+        get 'hand'
+      end
     end
 
     member do 
       get 'black_card'
+      post 'hand'
     end
   end
 

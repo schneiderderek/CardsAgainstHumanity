@@ -16,4 +16,12 @@ class UsersController < ApplicationController
       format.json { render json: @user}
     end
   end
+
+  def hand
+    @hand = Hand.where(user_id: params[:id], game_id: params[:game_id]).first
+
+    respond_to do |format|
+      format.json { render json: @hand.white_cards }
+    end
+  end
 end

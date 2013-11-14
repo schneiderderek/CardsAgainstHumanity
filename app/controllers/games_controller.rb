@@ -44,6 +44,21 @@ class GamesController < ApplicationController
     end
   end
 
+  # POST
+  def hand
+    @game = Game.find(params[:id])
+    @card = WhiteCard.find(params[:card_id])
+    @card.hand = @game.hands.where(user_id: nil).first
+
+    respond_to do |format|
+      if @card.save
+        format.json { render json: {}, status: :ok }
+      else
+        format.json { render json: {}, status: :unprocessable_entity }
+      end
+    end
+  end
+
   # POST /games
   # POST /games.json
   def create
