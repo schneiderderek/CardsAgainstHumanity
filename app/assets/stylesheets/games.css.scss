@@ -5,14 +5,15 @@
 
 #game-content {
   width: 100%;
-}
-
-#game-black-card {
-  width: 25%;
-  float: left;
+  overflow: auto;
 }
 
 #game-hand {
-  width: 75%;
+  margin: 1% 0% 2% 0%;
+  height: 360px;
+  width: 80%;
   float: left;
+  border: solid black 2px;
+  border-radius: 6px;
+  overflow: auto;
 }

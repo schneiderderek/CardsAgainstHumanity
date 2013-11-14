@@ -21,7 +21,11 @@ $.ajax({
     $.ajax({
       url: document.URL + "/black_card.json",
       success: function(card_data, card_textStatus, card_jqXHR) {
-        generateCard(card_data['content'], 'black', 'game')
+        var card_div = document.createElement('div');
+        card_div.innerText = card_data['content']
+        card_div.setAttribute('class', 'black-card');
+
+        document.getElementById('game-content').insertBefore(card_div, document.getElementById('game-content').firstChild)
       }
     });
 
