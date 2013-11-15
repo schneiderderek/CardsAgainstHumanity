@@ -1,0 +1,13 @@
+module HTML5 :: Cards Against Humanity
+
+	def accomplished
+		Majority of back-end work has been completed. All initialization and model associations have been finalized. Extra routes have been added in order for client (ajax) to get specific pieces of the game board. Client code has been written to generate the board (cards, etc.) for normal users. Styling for the board design has been completed for normal players.
+
+		Overall completion: ~60%
+	end
+
+	def future
+		The only critical game logic left to implement is the control flow of users submitting cards, determining who the card-czar is and working out logic for people who enter/leave mid-game, and a points system. Also, the client side code for the card-czar needs to be implemented. 
+	end
+
+end
