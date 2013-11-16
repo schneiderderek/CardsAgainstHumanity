@@ -7,7 +7,7 @@ function refreshHand() {
     success: function(hand_data, hand_textStatus, hand_jqXHR) {
       $(document).ready(function(){
         $('#player-hand').empty();
-        
+
         for (var i = 0; i < hand_data.length; i++) {
           generateCard(hand_data[i], 'white', 'player');
         }
@@ -37,7 +37,7 @@ $.ajax({
   success: function(card_data, card_textStatus, card_jqXHR) {
     $(document).ready(function(){
       var card_div = document.createElement('div');
-      card_div.innerText = card_data['content'];
+      card_div.innerText = card_data['content'] + '\n\nPick ' + card_data['num_blanks'];
       card_div.setAttribute('class', 'black-card');
 
       document.getElementById('game-content').insertBefore(card_div, document.getElementById('game-content').firstChild);
