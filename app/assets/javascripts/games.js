@@ -1,5 +1,8 @@
 // Fill in the users hand
-refreshHand();
+if (/\/games\/[0-9]+/.test(window.location.pathname)) {
+  refreshHand();
+  getBlackCard();
+}
 
 function refreshHand() {
   $.ajax({
@@ -21,7 +24,7 @@ function refreshHand() {
                 refreshHand();
               },
               error: function() {
-                console.error("REQUEST FAILED")
+                alert("There seems to be an issue connecting to the server.\nPlease try refreshing the page.");
               }
             });
           }
@@ -32,18 +35,20 @@ function refreshHand() {
 }
 
 // Get the Black card for the game
-$.ajax({
-  url: document.URL + "/black_card.json",
-  success: function(card_data, card_textStatus, card_jqXHR) {
-    $(document).ready(function(){
-      var card_div = document.createElement('div');
-      card_div.innerText = card_data['content'] + '\n\nPick ' + card_data['num_blanks'];
-      card_div.setAttribute('class', 'black-card');
+function getBlackCard(){
+  $.ajax({
+    url: document.URL + "/black_card.json",
+    success: function(card_data, card_textStatus, card_jqXHR) {
+      $(document).ready(function(){
+        var card_div = document.createElement('div');
+        card_div.innerText = card_data['content'] + '\n\nPick ' + card_data['num_blanks'];
+        card_div.setAttribute('class', 'black-card');
 
-      document.getElementById('game-content').insertBefore(card_div, document.getElementById('game-content').firstChild);
-    });
-  }
-});
+        document.getElementById('game-content').insertBefore(card_div, document.getElementById('game-content').firstChild);
+      });
+    }
+  });
+}
 
 function generateCard(card, color, hand) {
   var card_div = document.createElement("div");
