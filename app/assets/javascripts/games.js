@@ -10,6 +10,7 @@ function refreshPlayerHand() {
   $.ajax({
     url: document.URL + "/users/" + $.cookie("user_id") + "/hand.json",
     success: function(hand_data, hand_textStatus, hand_jqXHR) {
+      console.info(czar)
       if (!czar) {
         $(document).ready(function(){
           $('#player-hand').empty();
@@ -93,7 +94,6 @@ function refreshGameHand() {
                 type: 'POST',
                 success: function(select_data, select_textStatus, select_jqXHR) {
                   $('#game-content #game-hand').empty();
-                  refreshPlayerHand();
                 },
                 error: function() {
                   alert("There seems to be an issue connecting to the server.\nPlease try refreshing the page.");
@@ -102,6 +102,8 @@ function refreshGameHand() {
             }
           });
         });
+      } else {
+        refreshPlayerHand();
       }
     }
   });

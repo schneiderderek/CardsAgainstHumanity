@@ -21,7 +21,7 @@ class GamesController < ApplicationController
 
     respond_to do |format|
       format.html # show.html.erb
-      format.json { render json: @game }
+      format.json { render json: {game: @game, black_card: @game.black_card} }
     end
   end
 
@@ -48,8 +48,9 @@ class GamesController < ApplicationController
   def hand
     @game = Game.find(params[:id])
     @card = WhiteCard.find(params[:card_id])
+    czar = current_user.id == @game.czar_id
 
-    if current_user.id == @game.czar_id
+    if czar
       # To be implimented
     else
       @user_hand = @card.hand
@@ -57,7 +58,7 @@ class GamesController < ApplicationController
     end
     
     respond_to do |format|
-      if current_user.id != @game.czar_id && @card.save
+      if !czar && @card.save
         @user_hand.save
         format.json { render json: {}, status: :ok }
       else
@@ -68,15 +69,16 @@ class GamesController < ApplicationController
 
   def white_cards
     @game = Game.find(params[:id])
+    czar = current_user.id == @game.czar_id
 
-    if current_user.id == @game.czar_id
+    if czar
       @white_cards = @game.hands.where(user_id: nil).first.white_cards
     else
       @white_cards = @game.hands.where(user_id: nil).first.white_cards.where(user_id: current_user.id)
     end
 
     respond_to do |format|
-      format.json { render json: { white_cards: @white_cards, czar: current_user.id == @game.czar_id} }
+      format.json { render json: { white_cards: @white_cards, czar: czar} }
     end
   end
 
