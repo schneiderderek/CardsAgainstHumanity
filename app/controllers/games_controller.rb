@@ -48,11 +48,16 @@ class GamesController < ApplicationController
   def hand
     @game = Game.find(params[:id])
     @card = WhiteCard.find(params[:card_id])
-    @user_hand = @card.hand
-    @card.hand = @game.hands.where(user_id: nil).first
+
+    if current_user.id == @game.czar_id
+      # To be implimented
+    else
+      @user_hand = @card.hand
+      @card.hand = @game.hands.where(user_id: nil).first
+    end
     
     respond_to do |format|
-      if @card.save
+      if current_user.id != @game.czar_id && @card.save
         @user_hand.save
         format.json { render json: {}, status: :ok }
       else

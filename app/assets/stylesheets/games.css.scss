@@ -10,10 +10,15 @@
 
 #game-hand {
   margin: 1% 0% 2% 0%;
-  height: 270px;
+  min-height: 270px;
   width: 80%;
   float: left;
   border: solid black 2px;
   border-radius: 6px;
   overflow: auto;
+}
+
+.czar {
+  font-size: 3.5em;
+  text-align: center;
 }
