@@ -17,11 +17,12 @@ function refreshHand() {
 
         $('.white-card').click(function() {
           if (confirm("Are you sure you want to choose this card?")) {
+            var cardId =  $(this).attr('card-id');
             $.ajax({
-              url: document.URL + "/hand.json?card_id=" + $(this).attr('card-id'),
+              url: document.URL + "/hand.json?card_id=" + cardId,
               type: 'POST',
               success: function(select_data, select_textStatus, select_jqXHR) {
-                refreshHand();
+                $('.white-card[card-id=' + cardId + ']').remove();
               },
               error: function() {
                 alert("There seems to be an issue connecting to the server.\nPlease try refreshing the page.");
@@ -41,7 +42,7 @@ function getBlackCard(){
     success: function(card_data, card_textStatus, card_jqXHR) {
       $(document).ready(function(){
         var card_div = document.createElement('div');
-        card_div.innerText = card_data['content'] + '\n\nPick ' + card_data['num_blanks'];
+        card_div.textContent = card_data['content'] + '\n\nPick ' + card_data['num_blanks'];
         card_div.setAttribute('class', 'black-card');
 
         document.getElementById('game-content').insertBefore(card_div, document.getElementById('game-content').firstChild);
@@ -52,7 +53,7 @@ function getBlackCard(){
 
 function generateCard(card, color, hand) {
   var card_div = document.createElement("div");
-  card_div.innerText = card['content'];
+  card_div.textContent = card['content'];
   card_div.setAttribute("class", color + '-card');
   card_div.setAttribute("card-id", card['id']);
 

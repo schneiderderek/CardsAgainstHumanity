@@ -1,5 +1,5 @@
 class Hand < ActiveRecord::Base
-  attr_accessible :user, :game, :white_cards, :game_id
+  attr_accessible :user, :game, :white_cards, :game_id, :user_id
 
   belongs_to :user # if user is nil then the hand belongs to the game
   belongs_to :game
@@ -15,6 +15,7 @@ class Hand < ActiveRecord::Base
     self.game.deck.white_cards.to_a.sample(10 - self.white_cards.count).each do |card|
       card.deck = nil
       card.hand = self
+      card.user = self.user
       card.save
     end if self.user
   end

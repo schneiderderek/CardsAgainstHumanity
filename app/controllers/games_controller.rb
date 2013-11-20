@@ -68,8 +68,9 @@ class GamesController < ApplicationController
     @game = Game.new(params[:game])
     @game.original_deck_id = deck.id
     @game.deck = deck.dup
+    @game.czar_id = current_user.id
 
-    Hand.new(game: @game, user: current_user).save
+    Hand.create(game: @game, user: current_user)
 
     respond_to do |format|
       if @game.save

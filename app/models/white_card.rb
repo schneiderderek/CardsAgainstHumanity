@@ -1,8 +1,9 @@
 class WhiteCard < ActiveRecord::Base
-  attr_accessible :content, :deck, :hand
+  attr_accessible :content, :deck, :hand, :user
 
   belongs_to :deck
   belongs_to :hand
+  belongs_to :user
 
   validates :content, presence: true
   validate :deck_or_hand

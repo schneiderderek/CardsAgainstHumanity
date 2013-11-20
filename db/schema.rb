@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20131112144527) do
+ActiveRecord::Schema.define(:version => 20131119201115) do
 
   create_table "black_cards", :force => true do |t|
     t.datetime "created_at", :null => false
@@ -37,13 +37,15 @@ ActiveRecord::Schema.define(:version => 20131112144527) do
     t.integer  "max_players",      :default => 20
     t.boolean  "finished",         :default => false
     t.integer  "original_deck_id"
+    t.integer  "czar_id"
   end
 
   create_table "hands", :force => true do |t|
-    t.datetime "created_at", :null => false
-    t.datetime "updated_at", :null => false
+    t.datetime "created_at",                :null => false
+    t.datetime "updated_at",                :null => false
     t.integer  "user_id"
     t.integer  "game_id"
+    t.integer  "score",      :default => 0
   end
 
   create_table "users", :force => true do |t|
@@ -61,7 +63,6 @@ ActiveRecord::Schema.define(:version => 20131112144527) do
     t.datetime "updated_at",                             :null => false
     t.integer  "game_id"
     t.integer  "wins",                   :default => 0
-    t.integer  "points",                 :default => 0
   end
 
   add_index "users", ["email"], :name => "index_users_on_email", :unique => true
@@ -73,6 +74,7 @@ ActiveRecord::Schema.define(:version => 20131112144527) do
     t.string   "content"
     t.integer  "deck_id"
     t.integer  "hand_id"
+    t.integer  "user_id"
   end
 
 end
