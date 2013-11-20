@@ -57,11 +57,17 @@ function getBlackCard(){
   });
 }
 
-function generateCard(card, color, hand) {
+function generateCard(card, color, hand, czar) {
   var card_div = document.createElement("div");
   card_div.textContent = card['content'];
   card_div.setAttribute("class", color + '-card');
   card_div.setAttribute("card-id", card['id']);
+
+  if (hand == 'game' && czar) {
+    var dv = document.createElement('div');
+    dv.textContent = card['user_id'];
+    card_div.appendChild(dv);
+  }
 
   document.getElementById(hand + "-hand").appendChild(card_div);
 }
@@ -74,7 +80,7 @@ function refreshGameHand() {
     success: function(game_hand_data, game_hand_textStatus, game_hand_jqXHR) {
       $(document).ready(function() {
         for(var i = 0; i < game_hand_data['white_cards'].length; i++) {
-          generateCard(game_hand_data['white_cards'][i], 'white', 'game');
+          generateCard(game_hand_data['white_cards'][i], 'white', 'game', game_hand_data['czar']);
         }
       });
 

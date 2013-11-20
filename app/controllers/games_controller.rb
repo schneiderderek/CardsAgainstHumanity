@@ -67,6 +67,7 @@ class GamesController < ApplicationController
     end
   end
 
+  # GET
   def white_cards
     @game = Game.find(params[:id])
     czar = current_user.id == @game.czar_id
