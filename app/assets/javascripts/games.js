@@ -2,39 +2,40 @@ czar = false;
 
 // Fill in the users hand
 if (/\/games\/[0-9]+/.test(window.location.pathname)) {
-  refreshPlayerHand();
-  refreshGameHand();
   getBlackCard();
+  refreshGameHand();
 }
 
 function refreshPlayerHand() {
   $.ajax({
     url: document.URL + "/users/" + $.cookie("user_id") + "/hand.json",
     success: function(hand_data, hand_textStatus, hand_jqXHR) {
-      $(document).ready(function(){
-        $('#player-hand').empty();
+      if (!czar) {
+        $(document).ready(function(){
+          $('#player-hand').empty();
 
-        for (var i = 0; i < hand_data.length; i++) {
-          generateCard(hand_data[i], 'white', 'player');
-        }
-
-        $('#player-hand .white-card').click(function() {
-          if (confirm("Are you sure you want to choose this card?")) {
-            var cardId =  $(this).attr('card-id');
-            $.ajax({
-              url: document.URL + "/hand.json?card_id=" + cardId,
-              type: 'POST',
-              success: function(select_data, select_textStatus, select_jqXHR) {
-                $('.white-card[card-id=' + cardId + ']').remove();
-                refreshGameHand();
-              },
-              error: function() {
-                alert("There seems to be an issue connecting to the server.\nPlease try refreshing the page.");
-              }
-            });
+          for (var i = 0; i < hand_data.length; i++) {
+            generateCard(hand_data[i], 'white', 'player');
           }
+
+          $('#player-hand .white-card').click(function() {
+            if (confirm("Are you sure you want to choose this card?")) {
+              var cardId =  $(this).attr('card-id');
+              $.ajax({
+                url: document.URL + "/hand.json?card_id=" + cardId,
+                type: 'POST',
+                success: function(select_data, select_textStatus, select_jqXHR) {
+                  $('.white-card[card-id=' + cardId + ']').remove();
+                  refreshGameHand();
+                },
+                error: function() {
+                  alert("There seems to be an issue connecting to the server.\nPlease try refreshing the page.");
+                }
+              });
+            }
+          });
         });
-      });
+      }
     }
   });
 }
@@ -92,6 +93,7 @@ function refreshGameHand() {
                 type: 'POST',
                 success: function(select_data, select_textStatus, select_jqXHR) {
                   $('#game-content #game-hand').empty();
+                  refreshPlayerHand();
                 },
                 error: function() {
                   alert("There seems to be an issue connecting to the server.\nPlease try refreshing the page.");
