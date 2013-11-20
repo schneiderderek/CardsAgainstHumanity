@@ -61,6 +61,20 @@ class GamesController < ApplicationController
     end
   end
 
+  def white_cards
+    @game = Game.find(params[:id])
+
+    if current_user.id == @game.czar_id
+      @white_cards = @game.hands.where(user_id: nil).first.white_cards
+    else
+      @white_cards = @game.hands.where(user_id: nil).first.white_cards.where(user_id: current_user.id)
+    end
+
+    respond_to do |format|
+      format.json { render json: { white_cards: @white_cards, czar: current_user.id == @game.czar_id} }
+    end
+  end
+
   # POST /games
   # POST /games.json
   def create

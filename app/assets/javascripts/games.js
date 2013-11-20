@@ -1,10 +1,11 @@
 // Fill in the users hand
 if (/\/games\/[0-9]+/.test(window.location.pathname)) {
-  refreshHand();
+  refreshPlayerHand();
+  refreshGameHand();
   getBlackCard();
 }
 
-function refreshHand() {
+function refreshPlayerHand() {
   $.ajax({
     url: document.URL + "/users/" + $.cookie("user_id") + "/hand.json",
     success: function(hand_data, hand_textStatus, hand_jqXHR) {
@@ -15,7 +16,7 @@ function refreshHand() {
           generateCard(hand_data[i], 'white', 'player');
         }
 
-        $('.white-card').click(function() {
+        $('#player-hand .white-card').click(function() {
           if (confirm("Are you sure you want to choose this card?")) {
             var cardId =  $(this).attr('card-id');
             $.ajax({
@@ -42,7 +43,7 @@ function getBlackCard(){
     success: function(card_data, card_textStatus, card_jqXHR) {
       $(document).ready(function(){
         var card_div = document.createElement('div');
-        card_div.textContent = card_data['content'] + '\n\nPick ' + card_data['num_blanks'];
+        card_div.textContent = card_data['content'] + '\nPick ' + card_data['num_blanks'];
         card_div.setAttribute('class', 'black-card');
 
         document.getElementById('game-content').insertBefore(card_div, document.getElementById('game-content').firstChild);
@@ -58,4 +59,17 @@ function generateCard(card, color, hand) {
   card_div.setAttribute("card-id", card['id']);
 
   document.getElementById(hand + "-hand").appendChild(card_div);
+}
+
+function refreshGameHand() {
+  $.ajax({
+    url: document.URL + "/white_cards.json",
+    success: function(game_hand_data, game_hand_textStatus, game_hand_jqXHR) {
+      $(document).ready(function() {
+        for(var i = 0; i < game_hand_data['white_cards'].length; i++) {
+          generateCard(game_hand_data['white_cards'][i], 'white', 'game');
+        }
+      });
+    }
+  });
 }

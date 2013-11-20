@@ -13,6 +13,7 @@ CardsAgainstHumanity::Application.routes.draw do
     member do 
       get 'black_card'
       post 'hand'
+      get 'white_cards'
     end
   end
 
