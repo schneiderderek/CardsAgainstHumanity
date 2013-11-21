@@ -49,7 +49,7 @@ function getBlackCard(){
       $(document).ready(function(){
         var card_div = document.createElement('div');
         card_div.textContent = card_data['content'] + '\nPick ' + card_data['num_blanks'];
-        card_div.setAttribute('class', 'black-card');
+        card_div.setAttribute('class', 'black-card effect2');
 
         document.getElementById('game-content').insertBefore(card_div, document.getElementById('game-content').firstChild);
       });
@@ -60,7 +60,7 @@ function getBlackCard(){
 function generateCard(card, color, hand, czar) {
   var card_div = document.createElement("div");
   card_div.textContent = card['content'];
-  card_div.setAttribute("class", color + '-card');
+  card_div.setAttribute("class", color + '-card effect2');
   card_div.setAttribute("card-id", card['id']);
 
   if (hand == 'game' && czar) {

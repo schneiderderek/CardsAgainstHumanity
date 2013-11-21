@@ -51,7 +51,7 @@ class GamesController < ApplicationController
     czar = current_user.id == @game.czar_id
 
     if czar
-      # To be implimented
+      # To be implemented
     else
       @user_hand = @card.hand
       @card.hand = @game.hands.where(user_id: nil).first
