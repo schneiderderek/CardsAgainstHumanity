@@ -1,4 +1,5 @@
-czar = false;
+var czar = false;
+var picks;
 
 // Fill in the users hand
 if (/\/games\/[0-9]+/.test(window.location.pathname)) {
@@ -46,6 +47,8 @@ function getBlackCard(){
   $.ajax({
     url: document.URL + "/black_card.json",
     success: function(card_data, card_textStatus, card_jqXHR) {
+      setPicks(card_data['num_blanks']);
+
       $(document).ready(function(){
         var card_div = document.createElement('div');
         card_div.textContent = card_data['content'] + '\nPick ' + card_data['num_blanks'];
@@ -58,18 +61,20 @@ function getBlackCard(){
 }
 
 function generateCard(card, color, hand, czar) {
-  var card_div = document.createElement("div");
-  card_div.textContent = card['content'];
-  card_div.setAttribute("class", color + '-card effect2');
-  card_div.setAttribute("card-id", card['id']);
+  $(document).ready(function() {
+    var card_div = document.createElement("div");
+    card_div.textContent = card['content'];
+    card_div.setAttribute("class", color + '-card effect2');
+    card_div.setAttribute("card-id", card['id']);
 
-  if (hand == 'game' && czar) {
-    var dv = document.createElement('div');
-    dv.textContent = card['user_id'];
-    card_div.appendChild(dv);
-  }
+    if (hand == 'game' && czar) {
+      var dv = document.createElement('div');
+      dv.textContent = card['user_id'];
+      card_div.appendChild(dv);
+    }
 
-  document.getElementById(hand + "-hand").appendChild(card_div);
+    document.getElementById(hand + "-hand").appendChild(card_div);
+  });
 }
 
 function refreshGameHand() {
@@ -78,11 +83,9 @@ function refreshGameHand() {
   $.ajax({
     url: document.URL + "/white_cards.json",
     success: function(game_hand_data, game_hand_textStatus, game_hand_jqXHR) {
-      $(document).ready(function() {
-        for(var i = 0; i < game_hand_data['white_cards'].length; i++) {
-          generateCard(game_hand_data['white_cards'][i], 'white', 'game', game_hand_data['czar']);
-        }
-      });
+      for(var i = 0; i < game_hand_data['white_cards'].length; i++) {
+        generateCard(game_hand_data['white_cards'][i], 'white', 'game', game_hand_data['czar']);
+      }
 
       if (game_hand_data['czar']) {
         $('#player-hand').empty();
@@ -113,4 +116,10 @@ function refreshGameHand() {
       }
     }
   });
+}
+
+function setPicks(value) {
+  console.info("Before: " + window.picks);
+  window.picks = value;
+  console.info("After: " + window.picks);
 }

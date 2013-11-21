@@ -7,7 +7,7 @@ class Hand < ActiveRecord::Base
 
   validates :game, presence: true
 
-  after_save :populate_hand!
+  after_save :populate_hand!, :end_game
 
   private
 
@@ -18,5 +18,12 @@ class Hand < ActiveRecord::Base
       card.user = self.user
       card.save
     end if self.user
+  end
+
+  def end_game
+    if self.score >= 7
+      self.game.finished = true
+      self.game.save
+    end
   end
 end

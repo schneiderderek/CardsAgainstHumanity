@@ -51,18 +51,27 @@ class GamesController < ApplicationController
     czar = current_user.id == @game.czar_id
 
     if czar
-      # To be implemented
+      @user_hand = @card.user.hands.where(game_id: @game.id).first
+      @user_hand.score += 1
     else
       @user_hand = @card.hand
       @card.hand = @game.hands.where(user_id: nil).first
     end
     
     respond_to do |format|
-      if !czar && @card.save
-        @user_hand.save
-        format.json { render json: {}, status: :ok }
+      if czar
+        if @user_hand.save
+          @game.hands.where(user_id: nil).first.white_cards.each { |x| x.destroy }
+          format.json { render json: {}, status: :ok }
+        else
+          format.json { render json: {}, status: :unprocessable_entity }
+        end
       else
-        format.json { render json: {}, status: :unprocessable_entity }
+        if @card.save
+          format.json { render json: {}, status: :ok }
+        else
+          format.json { render json: {}, status: :unprocessable_entity }          
+        end
       end
     end
   end
