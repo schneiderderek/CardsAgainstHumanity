@@ -12,7 +12,11 @@ if (/\/games\/[0-9]+/.test(window.location.pathname)) {
       window.picks = game_data.black_card.num_blanks;
 
       setBlackCard();
-      refreshGameHand();
+      if (window.game.czar) {
+        refreshGameHand();
+      } else {
+        refreshPlayerHand();
+      }
     }
   });
 }
@@ -21,7 +25,7 @@ function refreshPlayerHand() {
   $.ajax({
     url: document.URL + "/users/" + $.cookie("user_id") + "/hand.json",
     success: function(hand_data, hand_textStatus, hand_jqXHR) {
-      if (!czar) {
+      if (!window.game.czar) {
         $(document).ready(function(){
           $('#player-hand').empty();
 
@@ -38,6 +42,7 @@ function refreshPlayerHand() {
                 type: 'POST',
                 success: function(select_data, select_textStatus, select_jqXHR) {
                   $('.white-card[card-id=' + cardId + ']').remove();
+                  window.pick--;
                   refreshGameHand();
                 },
                 error: function() {
