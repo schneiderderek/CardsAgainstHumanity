@@ -4,9 +4,19 @@
   height: 180px;
   float: left;
   border: solid black 4px;
+  border-radius: 9px;
+  -moz-border-radius: 9px;
   text-align: center;
   font-size: 1.5em;
   font-weight: bold;
   font-family: 'helvetica' sans-serif;
   padding: 1%;
+}
+
+.effect2{
+  top: 80%;
+  max-width: 300px;
+  -webkit-box-shadow: 0 15px 10px #777;
+  -moz-box-shadow: 0 15px 10px #777;
+  box-shadow: 0 15px 10px #777;
 }
