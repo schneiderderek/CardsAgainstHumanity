@@ -26,7 +26,8 @@ class Game < ActiveRecord::Base
   def new_round!
     if !self.finished
       self.hands.where(user_id: nil).first.white_cards.each { |x| x.destroy }
-
+      self.black_card.destroy if self.black_card
+      
       # Assign a black card
       black_card = self.deck.black_cards.to_a.sample(1)[0]
       black_card.deck = nil

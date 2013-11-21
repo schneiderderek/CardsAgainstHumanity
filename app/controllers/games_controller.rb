@@ -24,7 +24,7 @@ class GamesController < ApplicationController
     if czar
       @white_cards = @game.hands.where(user_id: nil).first.white_cards
     else
-      @white_cards = @game.hands.where(user_id: nil).first.white_cards.where(user_id: current_user.id)
+      @white_cards = @game.hands.where(user_id: current_user.id).first.white_cards
     end
 
     respond_to do |format|
