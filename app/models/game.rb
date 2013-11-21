@@ -20,10 +20,27 @@ class Game < ActiveRecord::Base
     # Create hand (for submitted cards)
     self.hands.new(game: self).save
 
-    # Assign a black card
-    black_card = self.deck.black_cards.to_a.sample(1)[0]
-    black_card.deck = nil
-    black_card.game = self
-    black_card.save
+    self.new_round!
+  end
+
+  def new_round!
+    if !self.finished
+      self.hands.where(user_id: nil).first.white_cards.each { |x| x.destroy }
+
+      # Assign a black card
+      black_card = self.deck.black_cards.to_a.sample(1)[0]
+      black_card.deck = nil
+      black_card.game = self
+      black_card.save
+
+      # Pick a new card czar
+      if self.users.where("user_id > #{self.czar_id}").count > 0
+        self.czar_id = self.users.where("user_id > #{self.czar_id}").first.id
+      else
+        self.czar_id = self.users.first.id if self.users.first
+      end
+
+      self.save
+    end
   end
 end

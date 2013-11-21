@@ -19,17 +19,24 @@ class GamesController < ApplicationController
     cookies[:user_id] = current_user.id
     cookies[:game_id] = @game.id
 
+    czar = current_user.id == @game.czar_id
+
+    if czar
+      @white_cards = @game.hands.where(user_id: nil).first.white_cards
+    else
+      @white_cards = @game.hands.where(user_id: nil).first.white_cards.where(user_id: current_user.id)
+    end
+
     respond_to do |format|
       format.html # show.html.erb
-      format.json { render json: {game: @game, black_card: @game.black_card} }
-    end
-  end
-
-  def black_card
-    @game = Game.find(params[:id])
-
-    respond_to do |format|
-      format.json {render json: @game.black_card}
+      format.json { 
+        render json: {
+          game: @game, 
+          black_card: @game.black_card, 
+          white_cards: @white_cards, 
+          czar: czar
+        }
+      }
     end
   end
 
@@ -61,7 +68,7 @@ class GamesController < ApplicationController
     respond_to do |format|
       if czar
         if @user_hand.save
-          @game.hands.where(user_id: nil).first.white_cards.each { |x| x.destroy }
+          @game.new_round!
           format.json { render json: {}, status: :ok }
         else
           format.json { render json: {}, status: :unprocessable_entity }
@@ -73,22 +80,6 @@ class GamesController < ApplicationController
           format.json { render json: {}, status: :unprocessable_entity }          
         end
       end
-    end
-  end
-
-  # GET
-  def white_cards
-    @game = Game.find(params[:id])
-    czar = current_user.id == @game.czar_id
-
-    if czar
-      @white_cards = @game.hands.where(user_id: nil).first.white_cards
-    else
-      @white_cards = @game.hands.where(user_id: nil).first.white_cards.where(user_id: current_user.id)
-    end
-
-    respond_to do |format|
-      format.json { render json: { white_cards: @white_cards, czar: czar} }
     end
   end
 
