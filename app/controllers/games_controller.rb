@@ -32,8 +32,9 @@ class GamesController < ApplicationController
       format.json { 
         render json: {
           game: @game, 
-          black_card: @game.black_card, 
-          white_cards: @white_cards, 
+          black_card: @game.black_card,
+          game_hand: @game.hands.where(user_id: nil).first.white_cards.as_json(only: :content),
+          player_hand: @white_cards.as_json(only: [:content, :id]), 
           czar: czar
         }
       }

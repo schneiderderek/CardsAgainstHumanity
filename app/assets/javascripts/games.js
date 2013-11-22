@@ -3,9 +3,11 @@ var game;
 var picks;
 
 refreshGame();
+setInterval(refreshGame, 1000);
 
 function refreshGame() {
   if (/\/games\/[0-9]+/.test(window.location.pathname)) {
+    console.warn("Game updated.")
     $.ajax({
       url: document.URL + '.json',
       success: function(game_data, game_textStatus, game_jqXHR) {
@@ -13,7 +15,7 @@ function refreshGame() {
         window.picks = game_data.black_card.num_blanks;
 
         setBlackCard();
-        setHand(window.game.czar, window.game.white_cards);
+        setHand(window.game.czar, window.game.player_hand);
       }
     });
   }
@@ -21,71 +23,54 @@ function refreshGame() {
 
 function setHand(czar, cards) {
   if (!czar) {
-    $(document).ready(function(){
-      $('#player-hand').empty();
+    generateCards(cards, 'white', 'player', czar);
 
-      for (var i = 0; i < cards.length; i++) {
-        generateCard(cards[i], 'white', 'player');
+    $('#player-hand .white-card.effect2').click(function() {
+      if (confirm("Are you sure you want to choose this card?")) {
+        var cardId =  $(this).attr('card-id');
+        $.ajax({
+          url: document.URL + "/hand.json?card_id=" + cardId,
+          type: 'POST',
+          success: function(select_data, select_textStatus, select_jqXHR) {
+            $('.white-card[card-id=' + cardId + ']').remove();
+            window.pick--;
+          },
+          error: function() {
+            alert("There seems to be an issue connecting to the server.\nPlease try refreshing the page.");
+          }
+        });
       }
-
-      $('#player-hand .white-card.effect2').click(function() {
-        if (confirm("Are you sure you want to choose this card?")) {
-          var cardId =  $(this).attr('card-id');
-          $.ajax({
-            url: document.URL + "/hand.json?card_id=" + cardId,
-            type: 'POST',
-            success: function(select_data, select_textStatus, select_jqXHR) {
-              $('.white-card[card-id=' + cardId + ']').remove();
-              window.pick--;
-              refreshGameHand();
-            },
-            error: function() {
-              alert("There seems to be an issue connecting to the server dumbass.\nPlease try refreshing the page.");
-            }
-          });
-        }
-      });
     });
   } else {
-    $(document).ready(function(){
-      $('#game-hand').empty();
+    generateCards(window.game.game_hand, 'white', 'game', czar)
 
-      for(var i = 0; i < window.game.white_cards.length; i++) {
-        generateCard(window.game.white_cards[i], 'white', 'game', window.game.czar);
-      }
+    $('#player-hand').empty();
+    var playerHand = document.getElementById('player-hand');
+    playerHand.textContent = "You are the card czar";
+    playerHand.setAttribute('class', 'czar');
 
-      if (window.game.czar) {
-        $(document).ready(function() {
-          $('#player-hand').empty();
-          var playerHand = document.getElementById('player-hand');
-          playerHand.textContent = "You are the card czar";
-          playerHand.setAttribute('class', 'czar');
-
-          $('#game-content #game-hand .white-card').click(function() {
-            if (confirm("Are you sure you want to choose this card?")) {
-              var cardId =  $(this).attr('card-id');
-              $.ajax({
-                url: document.URL + "/hand.json?card_id=" + cardId,
-                type: 'POST',
-                success: function(select_data, select_textStatus, select_jqXHR) {
-                  $('#game-content #game-hand').empty();
-                  refreshGame();
-                },
-                error: function() {
-                  alert("There seems to be an issue connecting to the server.\nPlease try refreshing the page.");
-                }
-              });
-            }
-          });
+    $('#game-content #game-hand .white-card').click(function() {
+      if (confirm("Are you sure you want to choose this card?")) {
+        var cardId =  $(this).attr('card-id');
+        $.ajax({
+          url: document.URL + "/hand.json?card_id=" + cardId,
+          type: 'POST',
+          success: function(select_data, select_textStatus, select_jqXHR) {
+            $('#game-content #game-hand').empty();
+            refreshGame();
+          },
+          error: function() {
+            alert("There seems to be an issue connecting to the server.\nPlease try refreshing the page.");
+          }
         });
       }
     });
   }
 }
 
-function setBlackCard(){
-  $(document).ready(function(){
-    var card_div = document.createElement('div');
+function setBlackCard() {
+  $(document).ready(function() {
+    var card_div = document.getElementById('black-card');
     card_div.textContent = window.game.black_card.content + '\nPick ' + window.game.black_card.num_blanks;
     card_div.setAttribute('class', 'black-card effect2');
 
@@ -106,4 +91,13 @@ function generateCard(card, color, hand, czar) {
   }
 
   document.getElementById(hand + "-hand").appendChild(card_div);
+}
+
+function generateCards(cardArr, color, hand, czar) {
+  $(document).ready(function() {
+    $('#' + hand + '-hand').empty();
+    for(var i = 0; i < cardArr.length; i++) {
+      generateCard(cardArr[i], 'white', 'game', czar);
+    }
+  });
 }
