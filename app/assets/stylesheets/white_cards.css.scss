@@ -1,7 +1,7 @@
 .white-card {
   margin: 1%;
   width: 18%;
-  height: 180px;
+  min-height: 180px;
   float: left;
   border: solid black 4px;
   border-radius: 9px;
@@ -10,7 +10,7 @@
   font-size: 1.5em;
   font-weight: bold;
   font-family: 'helvetica' sans-serif;
-  padding: 1%;
+  padding: 5px;
 }
 
 .effect2{

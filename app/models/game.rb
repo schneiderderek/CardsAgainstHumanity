@@ -41,6 +41,9 @@ class Game < ActiveRecord::Base
         self.czar_id = self.users.first.id if self.users.first
       end
 
+      # Populate all user hands
+      self.hands.each { |h| h.populate_hand! }
+
       self.save
     end
   end

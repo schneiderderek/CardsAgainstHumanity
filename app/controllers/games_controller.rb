@@ -16,12 +16,9 @@ class GamesController < ApplicationController
   # GET /games/1.json
   def show
     @game = Game.find(params[:id])
-    cookies[:user_id] = current_user.id
-    cookies[:game_id] = @game.id
+    @czar = current_user.id == @game.czar_id
 
-    czar = current_user.id == @game.czar_id
-
-    if czar
+    if @czar
       @white_cards = @game.hands.where(user_id: nil).first.white_cards
     else
       @white_cards = @game.hands.where(user_id: current_user.id).first.white_cards
@@ -29,13 +26,13 @@ class GamesController < ApplicationController
 
     respond_to do |format|
       format.html # show.html.erb
-      format.json { 
+      format.json {
         render json: {
           game: @game, 
-          black_card: @game.black_card,
-          game_hand: @game.hands.where(user_id: nil).first.white_cards.as_json(only: :content),
+          black_card: @game.black_card.as_json(only: [:num_blanks, :content]),
+          game_hand: @game.hands.where(user_id: nil).first.white_cards.as_json(only: [:content, :user_id]),
           player_hand: @white_cards.as_json(only: [:content, :id]), 
-          czar: czar
+          czar: @czar
         }
       }
     end

@@ -9,15 +9,13 @@ class Hand < ActiveRecord::Base
 
   after_save :populate_hand!, :end_game
 
-  private
-
   def populate_hand!
     self.game.deck.white_cards.to_a.sample(10 - self.white_cards.count).each do |card|
       card.deck = nil
       card.hand = self
       card.user = self.user
       card.save
-    end if self.user
+    end if self.user_id
   end
 
   def end_game
