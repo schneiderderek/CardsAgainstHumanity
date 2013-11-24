@@ -36,7 +36,7 @@ class Game < ActiveRecord::Base
 
       # Pick a new card czar
       if self.users.where("user_id > #{self.czar_id}").count > 0
-        self.czar_id = self.users.where("user_id > #{self.czar_id}").first.id
+        self.czar_id = self.users.where("user_id > #{self.czar_id}").order('id ASC').first.id
       elsif self.users.first
         self.czar_id = self.users.order('id ASC').first.id
       end
