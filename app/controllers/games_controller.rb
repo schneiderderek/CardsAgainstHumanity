@@ -107,4 +107,9 @@ class GamesController < ApplicationController
       end
     end
   end
+
+  def operation_destroy
+    Game.all.each { |g| g.destroy if (Time.zone.now - g.updated_at).to_i / 1.day >= 14 }
+  end
+
 end

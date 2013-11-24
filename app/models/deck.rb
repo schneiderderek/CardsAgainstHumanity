@@ -13,4 +13,5 @@ class Deck < ActiveRecord::Base
     original_deck.white_cards.each { |c| c.duplicate_for self } 
     original_deck.black_cards.each { |c| c.duplicate_for self }
   end
+
 end
