@@ -1,25 +1,13 @@
-#player-hand {
-  width: 100%;
-  overflow: auto;
-}
-
 #game-content {
   width: 100%;
   overflow: auto;
 }
 
-#game-hand {
-  margin: 1% 0% 2% 0%;
-  min-height: 270px;
-  width: 80%;
-  float: left;
-  border: solid black 2px;
-  border-radius: 6px;
-  overflow: auto;
-}
-
 .czar {
-  font-size: 3.5em;
   font-weight: bold;
   text-align: center;
+}
+
+#black-card {
+  word-wrap: break-word;
 }
