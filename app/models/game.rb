@@ -37,12 +37,15 @@ class Game < ActiveRecord::Base
       # Pick a new card czar
       if self.users.where("user_id > #{self.czar_id}").count > 0
         self.czar_id = self.users.where("user_id > #{self.czar_id}").first.id
-      else
-        self.czar_id = self.users.first.id if self.users.first
+      elsif self.users.first
+        self.czar_id = self.users.first.id
       end
 
-      # Populate all user hands
-      self.hands.each { |h| h.populate_hand! }
+      # Populate all user hands, and set # submissions value
+      self.hands.each do |h| 
+        h.populate_hand!
+        h.submissions_left = black_card.num_blanks
+      end
 
       self.save
     end

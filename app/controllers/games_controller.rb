@@ -31,7 +31,8 @@ class GamesController < ApplicationController
           game: @game, 
           black_card: @game.black_card.as_json(only: [:num_blanks, :content]),
           game_hand: @game.hands.where(user_id: nil).first.white_cards.as_json(only: [:content, :user_id]),
-          player_hand: @white_cards.as_json(only: [:content, :id]), 
+          player_hand: @white_cards.as_json(only: [:content, :id]),
+          player: @game.hands.where(user_id: current_user.id).first,
           czar: @czar
         }
       }
@@ -58,9 +59,13 @@ class GamesController < ApplicationController
     if czar
       @user_hand = @card.user.hands.where(game_id: @game.id).first
       @user_hand.score += 1
-    else
+    elsif @card.hand.submissions_left > 0
       @user_hand = @card.hand
       @card.hand = @game.hands.where(user_id: nil).first
+      @user_hand.submissions_left -= 1
+    else
+      render json: {}, status: :unprocessable_entity
+      return
     end
     
     respond_to do |format|
@@ -72,7 +77,7 @@ class GamesController < ApplicationController
           format.json { render json: {}, status: :unprocessable_entity }
         end
       else
-        if @card.save
+        if @card.save && @user_hand.save
           format.json { render json: {}, status: :ok }
         else
           format.json { render json: {}, status: :unprocessable_entity }          

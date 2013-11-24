@@ -82,7 +82,7 @@ function setBlackCard() {
 }
 
 function generateCard(card, color, hand, czar) {
-  var card_div = document.createElement("div");
+  var card_div = document.createElement('div');
   card_div.textContent = card.content;
   card_div.setAttribute('class', color + '-card effect2');
   card_div.setAttribute('card-id', card['id']);
