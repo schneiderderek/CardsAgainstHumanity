@@ -38,7 +38,7 @@ class Game < ActiveRecord::Base
       if self.users.where("user_id > #{self.czar_id}").count > 0
         self.czar_id = self.users.where("user_id > #{self.czar_id}").first.id
       elsif self.users.first
-        self.czar_id = self.users.first.id
+        self.czar_id = self.users.order('id ASC').first.id
       end
 
       # Populate all user hands, and set # submissions value
