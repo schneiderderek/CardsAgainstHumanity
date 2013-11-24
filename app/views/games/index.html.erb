@@ -12,7 +12,7 @@
 
 <% @games.each do |game| %>
   <tr>
-    <td><%= link_to game.name, game %></td>
+    <td><%= game.name %></td>
     <td><%= game.users.count %></td>
     <td><%= game.max_players %></td>
     <td><%= user_in_game(current_user, game) ? link_to("Resume", game_path(game), class: "btn btn-success") : link_to("Join", new_game_user_hand_path(game.id, current_user.id), class: "btn btn-primary") %></td>

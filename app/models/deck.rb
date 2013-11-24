@@ -3,8 +3,8 @@ class Deck < ActiveRecord::Base
     :black_cards
 
   belongs_to :game # if game_id is nil then the deck is not being played
-  has_many :white_cards
-  has_many :black_cards
+  has_many :white_cards, dependent: :destroy
+  has_many :black_cards, dependent: :destroy
 
   validates :name, presence: true
 

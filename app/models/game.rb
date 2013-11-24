@@ -4,9 +4,9 @@ class Game < ActiveRecord::Base
 
   attr_protected :original_deck_id
   
-  has_one :black_card
-  has_one :deck
-  has_many :hands
+  has_one :black_card, dependent: :destroy
+  has_one :deck, dependent: :destroy
+  has_many :hands, dependent: :destroy
   has_many :users, through: :hands
 
   validates :name, :max_players, :deck, presence: true
