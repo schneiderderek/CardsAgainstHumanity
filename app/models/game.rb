@@ -42,9 +42,10 @@ class Game < ActiveRecord::Base
       end
 
       # Populate all user hands, and set # submissions value
-      self.hands.each do |h| 
+      self.hands.each do |h|
         h.populate_hand!
         h.submissions_left = black_card.num_blanks
+        h.save
       end
 
       self.save

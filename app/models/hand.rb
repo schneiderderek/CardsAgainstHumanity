@@ -7,7 +7,7 @@ class Hand < ActiveRecord::Base
 
   validates :game, presence: true
 
-  after_save :populate_hand!, :end_game
+  after_save :end_game
 
   def populate_hand!
     self.game.deck.white_cards.to_a.sample(10 - self.white_cards.count).each do |card|
@@ -19,9 +19,7 @@ class Hand < ActiveRecord::Base
   end
 
   def end_game
-    if self.score >= 7
-      self.game.finished = true
-      self.game.save
-    end
+    self.game.finished = self.score >= self.game.max_score
+    self.game.save
   end
 end
