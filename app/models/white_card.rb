@@ -18,6 +18,6 @@ class WhiteCard < ActiveRecord::Base
   private
   def deck_or_hand
     errors.add :white_card, "White card cannot be assigned to a hand and deck" if self.hand && self.deck
-    errors.add :white_card, "White card needs to be assigned to a hand or deck" unless self.hand || self.deck
+    # errors.add :white_card, "White card needs to be assigned to a hand or deck" unless self.hand || self.deck
   end
 end

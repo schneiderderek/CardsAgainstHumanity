@@ -26,6 +26,8 @@ class GamesController < ApplicationController
     end
 
     @player = @game.hands.where(user_id: current_user.id).first
+    @winning_card = WhiteCard.find(@game.winning_card_id).content if @game.winning_card_id
+    @winning_player = User.find(WhiteCard.find(@game.winning_card_id).user_id).email if @game.winning_card_id
 
     respond_to do |format|
       format.html # show.html.erb
@@ -42,6 +44,10 @@ class GamesController < ApplicationController
           czar: {
             email: @czar_user.email,
             self: @czar
+          },
+          winner: {
+            email: @winning_player,
+            content: @winning_card
           }
         }
       }
@@ -68,6 +74,10 @@ class GamesController < ApplicationController
     if czar
       @user_hand = @card.user.hands.where(game_id: @game.id).first
       @user_hand.score += 1
+      @game.winning_card_id = @card.id
+      @game.save
+      @card.hand_id = nil
+      @card.save
     elsif @card.hand.submissions_left > 0
       @user_hand = @card.hand
       @card.hand = @game.hands.where(user_id: nil).first

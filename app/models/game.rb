@@ -44,7 +44,7 @@ class Game < ActiveRecord::Base
       # Populate all user hands, and set # submissions value
       self.hands.each do |h|
         h.populate_hand!
-        h.submissions_left = black_card.num_blanks
+        h.submissions_left = (h.user.nil? || h.user.id == self.czar_id) ? 0 : black_card.num_blanks
         h.save
       end
 

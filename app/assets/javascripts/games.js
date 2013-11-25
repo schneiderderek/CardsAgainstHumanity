@@ -16,6 +16,7 @@ function refreshGame() {
             showPlayersWaiting(game_data.players);
           } else {
             setPlayerHand(game_data.player, game_data.player_hand);
+            showLastGameWinner(game_data.winner);
           }
 
         } else {
@@ -34,7 +35,6 @@ function setGameHand(player, czar, hand) {
     $('#player-hand').empty();
     $('#game-content #game-hand .white-card.effect2').click(function() {
 
-      console.warn("Set up event listener for: " + this);
       if (confirm("Are you sure you want to choose this card?")) {
         var cardId = $(this).attr('card-id');
         $.ajax({
@@ -157,5 +157,11 @@ function showPlayersWaiting(players) {
     }
 
     $('#player-hand')[0].appendChild(list);
+  });
+}
+
+function showLastGameWinner(winner) {
+  $(document).ready(function() {
+    $('#status-winner')[0].textContent = winner.email ? winner.email : "N/A";
   });
 }
