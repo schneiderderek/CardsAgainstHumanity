@@ -5,7 +5,7 @@ class User < ActiveRecord::Base
   attr_accessible :email, :password, :password_confirmation, :remember_me,
     :wins, :points, :games, :decks, :hands, :game_id
 
-  has_many :hands
+  has_many :hands, dependent: :destroy
   has_many :games, through: :hands
   has_many :decks
 end

@@ -50,7 +50,7 @@ class HandsController < ApplicationController
 
     respond_to do |format|
       if @hand.update_attributes(params[:hand])
-        format.html { redirect_to @hand, notice: 'Hand was successfully updated.' }
+        format.html { redirect_to games_path, notice: 'Hand was successfully updated.' }
         format.json { head :no_content }
       else
         format.html { render action: "edit" }
@@ -64,7 +64,7 @@ class HandsController < ApplicationController
     @hand.destroy
 
     respond_to do |format|
-      format.html { redirect_to hands_url }
+      format.html { redirect_to games_path }
       format.json { head :no_content }
     end
   end

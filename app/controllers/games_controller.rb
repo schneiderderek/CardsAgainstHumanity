@@ -4,7 +4,7 @@ class GamesController < ApplicationController
   # GET /games
   # GET /games.json
   def index
-    @games = Game.all
+    @games = Game.all.keep_if { |x| !x.finished }
 
     respond_to do |format|
       format.html # index.html.erb
@@ -36,6 +36,7 @@ class GamesController < ApplicationController
           game_hand: @game.hands.where(user_id: nil).first.white_cards.order('user_id ASC').as_json(only: [:content, :user_id, :id]),
           player_hand: @white_cards.as_json(only: [:content, :id]),
           player: @player,
+          players: @game.users,
           czar: {
             email: @czar_user.email,
             self: @czar
@@ -115,7 +116,7 @@ class GamesController < ApplicationController
   end
 
   def operation_destroy
-    Game.all.each { |g| g.destroy if (Time.zone.now - g.updated_at).to_i / 1.day >= 14 }
+    Game.all.each { |g| g.destroy if ((Time.zone.now - g.updated_at).to_i / 1.day >= 14) || g.finished }
   end
 
 end

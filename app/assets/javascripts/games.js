@@ -1,24 +1,27 @@
 refreshGame();
-setInterval(refreshGame, 1000);
+setInterval(refreshGame, 1600);
 
 function refreshGame() {
   if (/\/games\/[0-9]+$/.test(window.location.pathname)) {
     $.ajax({
       url: document.URL + '.json',
       success: function(game_data, game_textStatus, game_jqXHR) {
-        console.info('Game updated.');
-
-        setBlackCard(game_data.black_card);
-        setUserPoints(game_data.player.score);
-        setCzarInfo(game_data.czar.email);
-        setPlayerHand(game_data.player, game_data.player_hand);
-        setGameHand(game_data.czar.self, game_data.game_hand)
+        if (!game_data.game.finished) {
+          setBlackCard(game_data.black_card);
+          setUserPoints(game_data.player.score);
+          setCzarInfo(game_data.czar.email);
+          setPlayerHand(game_data.player, game_data.player_hand);
+          setGameHand(game_data.player, game_data.czar.self, game_data.game_hand)
+        } else {
+          console.warn("The Game has finished.");
+          endGame();
+        }
       }
     });
   }
 }
 
-function setGameHand(czar, hand) {
+function setGameHand(player, czar, hand) {
   if (czar) {
     generateCards(hand, 'white', 'game', czar);
 
@@ -29,7 +32,9 @@ function setGameHand(czar, hand) {
     czar_heading.setAttribute('class', 'czar');
     playerHand.appendChild(czar_heading);
 
-    $('#game-content #game-hand .white-card').click(function() {
+    $('#game-content #game-hand .white-card.effect2').click(function() {
+
+      console.warn("Set up event listener for: " + this);
       if (confirm("Are you sure you want to choose this card?")) {
         var cardId = $(this).attr('card-id');
         $.ajax({
@@ -45,6 +50,11 @@ function setGameHand(czar, hand) {
         });
       }
     });
+  } else if (player.submissions_left == 0) {
+    $('#game-hand').empty();
+    generateCards(hand, 'white', 'game', czar);
+  } else {
+    $('#game-hand').empty();
   }
 }
 
@@ -113,5 +123,16 @@ function setUserPoints(value) {
 function setCzarInfo(name) {
   $(document).ready(function() {
     $('#status-czar')[0].textContent = name;
+  });
+}
+
+function endGame() {
+  $(document).ready(function() {
+    $('#game-content').empty();
+    $('#player-hand').empty();
+
+    var endText = document.createElement('h1');
+    endText.textContent = "The Game Has Ended";
+    $('#game-content')[0].appendChild(endText);
   });
 }

@@ -1,6 +1,6 @@
 <div id="status" class="page-header" style="margin-top:0px;">
    <h2>Czar: <span id="status-czar"><%= @czar_user.email %></span>
-   <small class="pull-right">Your Awesome Points: <span id="status-player-points"><%= @player.score %></span> / <%= @game.max_score %></small></h2>
+   <small class="pull-right">Awesome Points: <span id="status-player-points"><%= @player.score %></span> / <%= @game.max_score %></small></h2>
 </div>
 
 <div id="game-content">
@@ -13,6 +13,6 @@
 
 <br>
 
-<%= link_to 'Back', games_path, class: 'btn btn-info btn-lg' %>
- 
+<%= link_to 'Back', games_path, class: 'btn btn-info' %>
+<%= link_to "Leave Game Forever", [@game, current_user, @player], method: :delete, data: { confirm: 'Are you sure?' }, class: 'btn btn-danger' %>
 <hr>
