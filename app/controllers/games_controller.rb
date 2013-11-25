@@ -33,7 +33,7 @@ class GamesController < ApplicationController
         render json: {
           game: @game, 
           black_card: @game.black_card.as_json(only: [:num_blanks, :content]),
-          game_hand: @game.hands.where(user_id: nil).first.white_cards.order('user_id ASC').as_json(only: [:content, :user_id]),
+          game_hand: @game.hands.where(user_id: nil).first.white_cards.order('user_id ASC').as_json(only: [:content, :user_id, :id]),
           player_hand: @white_cards.as_json(only: [:content, :id]),
           player: @player,
           czar: {
