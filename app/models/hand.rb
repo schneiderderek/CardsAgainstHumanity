@@ -19,7 +19,12 @@ class Hand < ActiveRecord::Base
   end
 
   def end_game
-    self.game.finished = self.score >= self.game.max_score
-    self.game.save
+    if self.score >= self.game.max_score
+      self.game.finished = true
+      self.game.save
+
+      self.user.wins += 1
+      self.user.save
+    end
   end
 end
