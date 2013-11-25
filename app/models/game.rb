@@ -1,5 +1,5 @@
 class Game < ActiveRecord::Base
-  attr_accessible :players, :name, :max_players, :finished, 
+  attr_accessible :name, :max_players, :finished, 
     :deck, :users, :hands
 
   attr_protected :original_deck_id

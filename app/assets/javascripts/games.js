@@ -10,13 +10,15 @@ function refreshGame() {
     $.ajax({
       url: document.URL + '.json',
       success: function(game_data, game_textStatus, game_jqXHR) {
-        console.warn('Game updated.');
+        console.info('Game updated.');
         window.game = game_data;
         window.picks = game_data.black_card.num_blanks;
 
-        setBlackCard();
-        setHand(game_data.czar, game_data.game_hand);
-        setHand(game_data.czar, game_data.player_hand);
+        setBlackCard(game_data.black_card);
+        setUserPoints(game_data.player.score);
+        setCzarInfo(game_data.czar.email);
+        setHand(game_data.czar.self, game_data.game_hand);
+        setHand(game_data.czar.self, game_data.player_hand);
       }
     });
   }
@@ -71,13 +73,13 @@ function setHand(czar, cards) {
   }
 }
 
-function setBlackCard() {
+function setBlackCard(black_card) {
   $(document).ready(function() {
-    var card_div = document.getElementById('black-card');
-    card_div.textContent = window.game.black_card.content + '\nPick ' + window.game.black_card.num_blanks;
+    var card_div = $('#black-card')[0];
+    card_div.textContent = black_card.content + '\nPick ' + black_card.num_blanks;
     card_div.setAttribute('class', 'black-card effect2');
 
-    document.getElementById('game-content').insertBefore(card_div, document.getElementById('game-content').firstChild);
+    $('#game-content')[0].insertBefore(card_div, document.getElementById('game-content').firstChild);
   });
 }
 
@@ -102,5 +104,17 @@ function generateCards(cardArr, color, hand, czar) {
     for(var i = 0; i < cardArr.length; i++) {
       generateCard(cardArr[i], color, hand, czar);
     }
+  });
+}
+
+function setUserPoints(value) {
+  $(document).ready(function() {
+    $('#status-player-points')[0].textContent = value;
+  });
+}
+
+function setCzarInfo(name) {
+  $(document).ready(function() {
+    $('#status-czar')[0].textContent = name;
   });
 }

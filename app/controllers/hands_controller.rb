@@ -35,6 +35,7 @@ class HandsController < ApplicationController
 
     respond_to do |format|
       if @hand.save
+        @hand.game.new_round! if @hand.game.users.count == 2
         format.html { redirect_to @hand.game, notice: 'Welcome to the game!' }
         format.json { render json: @hand, status: :created, location: @hand }
       else
