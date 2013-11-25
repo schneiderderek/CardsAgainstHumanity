@@ -1,12 +1,8 @@
-var czar = false;
-var game;
-var picks;
-
 refreshGame();
 setInterval(refreshGame, 1000);
 
 function refreshGame() {
-  if (/\/games\/[0-9]+/.test(window.location.pathname)) {
+  if (/\/games\/[0-9]+$/.test(window.location.pathname)) {
     $.ajax({
       url: document.URL + '.json',
       success: function(game_data, game_textStatus, game_jqXHR) {
