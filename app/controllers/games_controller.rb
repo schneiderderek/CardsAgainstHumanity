@@ -36,7 +36,9 @@ class GamesController < ApplicationController
           game_hand: @game.hands.where(user_id: nil).first.white_cards.order('user_id ASC').as_json(only: [:content, :user_id, :id]),
           player_hand: @white_cards.as_json(only: [:content, :id]),
           player: @player,
-          players: @game.users,
+          players: @game.users.collect { |u|
+            { email: u.email, submissions_left: u.hands.where(game_id: params[:id]).first.submissions_left }
+          }.as_json,
           czar: {
             email: @czar_user.email,
             self: @czar
@@ -90,7 +92,7 @@ class GamesController < ApplicationController
           format.json { render json: {}, status: :unprocessable_entity }          
         end
       end
-    end
+    end unless @game.finished
   end
 
   # POST /games
@@ -115,7 +117,7 @@ class GamesController < ApplicationController
     end
   end
 
-  def operation_destroy
+  def self.operation_destroy
     Game.all.each { |g| g.destroy if ((Time.zone.now - g.updated_at).to_i / 1.day >= 14) || g.finished }
   end
 

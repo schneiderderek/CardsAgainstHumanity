@@ -9,11 +9,17 @@ function refreshGame() {
         if (!game_data.game.finished) {
           setBlackCard(game_data.black_card);
           setUserPoints(game_data.player.score);
-          setCzarInfo(game_data.czar.email);
-          setPlayerHand(game_data.player, game_data.player_hand);
+          setCzarInfo(game_data.czar.self, game_data.czar.email);
           setGameHand(game_data.player, game_data.czar.self, game_data.game_hand)
+
+          if (game_data.czar.self) {
+            showPlayersWaiting(game_data.players);
+          } else {
+            setPlayerHand(game_data.player, game_data.player_hand);
+          }
+
         } else {
-          console.warn("The Game has finished.");
+          console.info("The Game has finished.");
           endGame();
         }
       }
@@ -26,12 +32,6 @@ function setGameHand(player, czar, hand) {
     generateCards(hand, 'white', 'game', czar);
 
     $('#player-hand').empty();
-    var playerHand = document.getElementById('player-hand');
-    var czar_heading = document.createElement('h1');
-    czar_heading.textContent = "You are the card czar";
-    czar_heading.setAttribute('class', 'czar');
-    playerHand.appendChild(czar_heading);
-
     $('#game-content #game-hand .white-card.effect2').click(function() {
 
       console.warn("Set up event listener for: " + this);
@@ -120,9 +120,9 @@ function setUserPoints(value) {
   });
 }
 
-function setCzarInfo(name) {
+function setCzarInfo(self, name) {
   $(document).ready(function() {
-    $('#status-czar')[0].textContent = name;
+    $('#status-czar')[0].textContent = self ? "YOU ARE THE CZAR" : name;
   });
 }
 
@@ -134,5 +134,28 @@ function endGame() {
     var endText = document.createElement('h1');
     endText.textContent = "The Game Has Ended";
     $('#game-content')[0].appendChild(endText);
+  });
+}
+
+function showPlayersWaiting(players) {
+  $(document).ready(function() {
+    var heading = document.createElement('h2');
+    heading.textContent = "Players Left To Submit:";
+    $('#player-hand')[0].appendChild(heading);
+
+    var list = document.createElement('ul');
+    list.setAttribute('class', 'list-group');
+
+    for(var i = 0; i < players.length; i++) {
+      console.warn("Current Player: " + players[i]);
+      if (players[i].submissions_left > 0) {
+        var li = document.createElement('li');
+        li.textContent = players[i].email;
+        li.setAttribute('class', 'list-group-item');
+        list.appendChild(li);
+      }
+    }
+
+    $('#player-hand')[0].appendChild(list);
   });
 }

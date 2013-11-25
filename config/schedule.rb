@@ -20,5 +20,5 @@
 # Learn more: http://github.com/javan/whenever
 
 every 1.day, :at => '5:30 am' do
-	runner "Game.operation_destroy"
+	runner "GamesController.operation_destroy"
 end
