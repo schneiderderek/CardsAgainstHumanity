@@ -15,8 +15,12 @@ function refreshGame() {
           if (game_data.czar.self) {
             showPlayersWaiting(game_data.players);
           } else {
-            setPlayerHand(game_data.player, game_data.player_hand);
+            setPlayerHand(game_data.player, game_data.player_hand, game_data.game_hand, game_data.winner);
             showLastGameWinner(game_data.winner);
+          }
+
+          if (game_data.player.submissions_left == 0 && !game_data.czar.self) {
+            showLastRoundInfo(game_data.game_hand, game_data.winner); 
           }
 
         } else {
@@ -147,7 +151,6 @@ function showPlayersWaiting(players) {
     list.setAttribute('class', 'list-group');
 
     for(var i = 0; i < players.length; i++) {
-      console.warn("Current Player: " + players[i]);
       if (players[i].submissions_left > 0) {
         var li = document.createElement('li');
         li.textContent = players[i].email;
@@ -165,3 +168,12 @@ function showLastGameWinner(winner) {
     $('#status-winner')[0].textContent = winner.email ? winner.email : "N/A";
   });
 }
+
+function showLastRoundInfo(cards, winner) {
+  $(document).ready(function() {
+    jQuery.noConflict();
+    generateCards(cards, 'white', 'modal', false);
+    $('#myModal').modal();
+  });
+}
+
