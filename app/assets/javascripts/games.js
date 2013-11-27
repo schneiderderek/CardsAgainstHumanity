@@ -1,3 +1,4 @@
+window.modalWasShown = false;
 refreshGame();
 setInterval(refreshGame, 1600);
 
@@ -173,7 +174,10 @@ function showLastRoundInfo(cards, winner) {
   $(document).ready(function() {
     jQuery.noConflict();
     generateCards(cards, 'white', 'modal', false);
-    $('#myModal').modal();
+    if (!window.modalWasShown) {
+      $('#myModal').modal();
+    }
+    window.modalWasShown = true;
   });
 }
 
