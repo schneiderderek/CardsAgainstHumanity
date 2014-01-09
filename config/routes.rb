@@ -13,6 +13,8 @@ CardsAgainstHumanity::Application.routes.draw do
     member do
       post 'hand'
     end
+
+    resources :submissions, except: [:new, :update, :edit, :destroy]
   end
 
   # The priority is based upon order of creation:
@@ -25,27 +27,6 @@ CardsAgainstHumanity::Application.routes.draw do
   # Sample of named route:
   #   match 'products/:id/purchase' => 'catalog#purchase', :as => :purchase
   # This route can be invoked with purchase_url(:id => product.id)
-
-  # Sample resource route (maps HTTP verbs to controller actions automatically):
-  #   resources :products
-
-  # Sample resource route with options:
-  #   resources :products do
-  #     member do
-  #       get 'short'
-  #       post 'toggle'
-  #     end
-  #
-  #     collection do
-  #       get 'sold'
-  #     end
-  #   end
-
-  # Sample resource route with sub-resources:
-  #   resources :products do
-  #     resources :comments, :sales
-  #     resource :seller
-  #   end
 
   # Sample resource route with more complex sub-resources
   #   resources :products do
