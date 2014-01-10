@@ -14,7 +14,11 @@ CardsAgainstHumanity::Application.routes.draw do
       post 'hand'
     end
 
-    resources :submissions, except: [:new, :update, :edit, :destroy]
+    resources :submissions, except: [:new, :update, :edit, :destroy] do 
+      collection do 
+        post 'submit'
+      end
+    end
   end
 
   # The priority is based upon order of creation:

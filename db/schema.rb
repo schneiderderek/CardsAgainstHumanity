@@ -30,7 +30,6 @@ ActiveRecord::Schema.define(:version => 20140110032907) do
   end
 
   create_table "games", :force => true do |t|
-    t.integer  "players",          :default => 0
     t.datetime "created_at",                          :null => false
     t.datetime "updated_at",                          :null => false
     t.string   "name",             :default => ""
@@ -38,7 +37,7 @@ ActiveRecord::Schema.define(:version => 20140110032907) do
     t.boolean  "finished",         :default => false
     t.integer  "original_deck_id"
     t.integer  "czar_id"
-    t.integer  "max_score"
+    t.integer  "max_score",        :default => 10
     t.integer  "winning_card_id"
   end
 
