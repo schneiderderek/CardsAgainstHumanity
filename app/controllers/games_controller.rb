@@ -18,24 +18,19 @@ class GamesController < ApplicationController
     @game = Game.find(params[:id])
     @czar = current_user.id == @game.czar_id
     @czar_user = User.find(@game.czar_id)
-
-    @game_hand = @game.submissions
-    if @czar
-      @white_cards = @game.hands.where(user_id: nil).first.white_cards
-    else
-      @white_cards = @game.hands.where(user_id: current_user.id).first.white_cards
-    end
+    
+    @white_cards = @game.hands.where(user_id: current_user.id).first.white_cards unless @czar
 
     @player = @game.hands.where(user_id: current_user.id).first
     @winning_card = WhiteCard.find(@game.winning_card_id).content if @game.winning_card_id
     @winning_player = User.find(WhiteCard.find(@game.winning_card_id).user_id).email if @game.winning_card_id
-    @submissions = Submission.where(game: @game).order(id: :asc)
+    @submissions = Submission.where(game_id: @game.id).order(id: :asc)
 
     respond_to do |format|
       format.html # show.html.erb
       format.json {
         render json: {
-          game: @game, 
+          game: @game.as_json(only: [:finished]), 
           black_card: @game.black_card.as_json(only: [:num_blanks, :content]),
           game_hand: @game.submissions.as_json(only: [:content, :user_id, :id]),
           player_hand: @white_cards.as_json(only: [:content, :id]),
