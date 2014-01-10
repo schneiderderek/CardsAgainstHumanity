@@ -8,6 +8,7 @@ class Game < ActiveRecord::Base
   has_one :deck, dependent: :destroy
   has_many :hands, dependent: :destroy
   has_many :users, through: :hands
+  has_many :submissions, dependent: :destroy
 
   validates :name, :max_players, :deck, presence: true
 
@@ -17,15 +18,12 @@ class Game < ActiveRecord::Base
     # Duplicate deck
     self.deck.duplicate_for_game(self.original_deck_id)
 
-    # Create hand (for submitted cards)
-    self.hands.new(game: self).save
-
     self.new_round!
   end
 
   def new_round!
     if !self.finished
-      self.hands.where(user_id: nil).first.white_cards.each { |x| x.destroy }
+      self.submissions.each { |s| s.destroy }
       self.black_card.destroy if self.black_card
       
       # Assign a black card

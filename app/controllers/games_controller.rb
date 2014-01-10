@@ -19,6 +19,7 @@ class GamesController < ApplicationController
     @czar = current_user.id == @game.czar_id
     @czar_user = User.find(@game.czar_id)
 
+    @game_hand = @game.submissions
     if @czar
       @white_cards = @game.hands.where(user_id: nil).first.white_cards
     else
@@ -28,6 +29,7 @@ class GamesController < ApplicationController
     @player = @game.hands.where(user_id: current_user.id).first
     @winning_card = WhiteCard.find(@game.winning_card_id).content if @game.winning_card_id
     @winning_player = User.find(WhiteCard.find(@game.winning_card_id).user_id).email if @game.winning_card_id
+    @submissions = Submission.where(game: @game).order(id: :asc)
 
     respond_to do |format|
       format.html # show.html.erb
@@ -35,7 +37,7 @@ class GamesController < ApplicationController
         render json: {
           game: @game, 
           black_card: @game.black_card.as_json(only: [:num_blanks, :content]),
-          game_hand: @game.hands.where(user_id: nil).first.white_cards.order('user_id ASC').as_json(only: [:content, :user_id, :id]),
+          game_hand: @game.submissions.as_json(only: [:content, :user_id, :id]),
           player_hand: @white_cards.as_json(only: [:content, :id]),
           player: @player,
           players: @game.users.collect { |u|
@@ -48,7 +50,8 @@ class GamesController < ApplicationController
           winner: {
             email: @winning_player,
             content: @winning_card
-          }
+          },
+          submissions: @submissions
         }
       }
     end
@@ -130,5 +133,4 @@ class GamesController < ApplicationController
   def self.operation_destroy
     Game.all.each { |g| g.destroy if ((Time.zone.now - g.updated_at).to_i / 1.day >= 14) || g.finished }
   end
-
 end
