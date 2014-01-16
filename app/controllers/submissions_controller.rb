@@ -1,12 +1,9 @@
 class SubmissionsController < ApplicationController
-  # before_filter :authenticate_user!
-  skip_before_filter  :verify_authenticity_token
+  before_filter :authenticate_user!
   respond_to :json
 
   def index
     @submissions = Submission.where(game_id: params[:game_id])
-
-    # respond_with @submissions
 
     render json: {
       submissions: @submissions,
@@ -24,17 +21,19 @@ class SubmissionsController < ApplicationController
   def create
     @submission = Submission.new
     @card = WhiteCard.find(params[:card_id])
+    @hand = @card.hand
 
-    if true || @card.hand.user.id == current_user.id
+    if @card.hand.user.id == current_user.id and @hand.submissions_left > 0
       @submission.content = @card.content
-      @submission.user_id = @card.hand.user.id
-      @submission.game_id = @card.hand.game.game_id
+      @submission.user_id = @hand.user.id
+      @submission.game_id = @hand.game.id
     else
       render json: { message: 'You are not authorized to submit this card.', status: 401 }, status: 401
       return
     end
 
     if @submission.save && @card.destroy
+      @hand.update_attributes(submissions_left: @hand.submissions_left - 1)
       render json: { 
         message: 'The submission was successfully saved.', 
         status: 200,

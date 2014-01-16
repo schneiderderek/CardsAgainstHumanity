@@ -10,7 +10,7 @@ function refreshGame() {
     $.ajax({
       url: document.URL + '.json',
       success: function(game_data, game_textStatus, game_jqXHR) {
-        console.info("Game data created.")
+        console.info("Game data updated.")
         window.App.data = game_data
         if (!game_data.game.finished) {
           setBlackCard(game_data.black_card);
