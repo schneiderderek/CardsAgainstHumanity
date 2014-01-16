@@ -1,9 +1,5 @@
-one: 
-   players: 0
-   name: "Game 1"
+default:
+   name: Game 1
    max_players: 25
-
-two:
-   players: 0
-   name: "Game 2"
-   max_players: 20
+   finished: false
+   max_score: 10

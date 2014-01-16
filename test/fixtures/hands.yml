@@ -1,6 +1,12 @@
-one:
-   user_id: 1
-   game_id: 1
+# General
+user_1_hand:
+  user: default
+  game: default
+  score: 0
+  submissions_left: 0
 
-two:
-   game_id: 1
+user_2_hand:
+  user_id: user_2
+  game: default
+  score: 0
+  submissions_left: 1

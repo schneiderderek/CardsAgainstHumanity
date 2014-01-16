@@ -7,7 +7,7 @@ class Submission < ActiveRecord::Base
   validate :user_and_game_valid
 
   def user_and_game_valid
-    errors.add(:user_id, "User does not exist") unless User.where(id: params[:user_id]).count > 0
-    errors.add(:game_id, "Game does not exist") unless Game.where(id: params[:game_id]).count > 0
+    errors.add(:user_id, "User does not exist") unless User.where(id: user_id).count > 0
+    errors.add(:game_id, "Game does not exist") unless Game.where(id: game_id).count > 0
   end
 end

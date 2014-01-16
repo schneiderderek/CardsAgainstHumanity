@@ -1,4 +1,7 @@
 window.modalWasShown = false;
+window.App = {
+  Actions: {}
+}
 refreshGame();
 setInterval(refreshGame, 1600);
 
@@ -7,6 +10,8 @@ function refreshGame() {
     $.ajax({
       url: document.URL + '.json',
       success: function(game_data, game_textStatus, game_jqXHR) {
+        console.info("Game data created.")
+        window.App.data = game_data
         if (!game_data.game.finished) {
           setBlackCard(game_data.black_card);
           setUserPoints(game_data.player.score);
@@ -16,7 +21,7 @@ function refreshGame() {
           if (game_data.czar.self) {
             showPlayersWaiting(game_data.players);
           } else {
-            setPlayerHand(game_data.player, game_data.player_hand, game_data.game_hand, game_data.winner);
+            window.App.Actions.updatePlayerHand();
             showLastGameWinner(game_data.winner);
           }
 
@@ -60,28 +65,6 @@ function setGameHand(player, czar, hand) {
     generateCards(hand, 'white', 'game', czar);
   } else {
     $('#game-hand').empty();
-  }
-}
-
-function setPlayerHand(player, hand) {
-  generateCards(hand, 'white', 'player', false);
-
-  if (player.submissions_left > 0) {
-    $('#player-hand .white-card.effect2').click(function() {
-      if (confirm('Are you sure you want to choose this card?')) {
-        var cardId =  $(this).attr('card-id');
-        $.ajax({
-          url: document.URL + "/hand.json?card_id=" + cardId,
-          type: 'POST',
-          success: function(select_data, select_textStatus, select_jqXHR) {
-            $('.white-card[card-id=' + cardId + ']').remove();
-          },
-          error: function() {
-            alert("There seems to be an issue connecting to the server.\nPlease try refreshing the page.");
-          }
-        });
-      }
-    });
   }
 }
 

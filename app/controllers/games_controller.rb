@@ -17,38 +17,41 @@ class GamesController < ApplicationController
   def show
     @game = Game.find(params[:id])
     @czar = current_user.id == @game.czar_id
-    @czar_user = User.find(@game.czar_id)
-    
-    @white_cards = @game.hands.where(user_id: current_user.id).first.white_cards unless @czar
-
+    @czar_user = @game.czar
     @player = @game.hands.where(user_id: current_user.id).first
+    @white_cards = @player.white_cards if @player and !@czar
     @winning_card = WhiteCard.find(@game.winning_card_id).content if @game.winning_card_id
     @winning_player = User.find(WhiteCard.find(@game.winning_card_id).user_id).email if @game.winning_card_id
     @submissions = Submission.where(game_id: @game.id).order(id: :asc)
 
     respond_to do |format|
-      format.html # show.html.erb
-      format.json {
-        render json: {
-          game: @game.as_json(only: [:finished]), 
-          black_card: @game.black_card.as_json(only: [:num_blanks, :content]),
-          game_hand: @game.submissions.as_json(only: [:content, :user_id, :id]),
-          player_hand: @white_cards.as_json(only: [:content, :id]),
-          player: @player,
-          players: @game.users.collect { |u|
-            { email: u.email, submissions_left: u.hands.where(game_id: params[:id]).first.submissions_left }
-          }.as_json,
-          czar: {
-            email: @czar_user.email,
-            self: @czar
-          },
-          winner: {
-            email: @winning_player,
-            content: @winning_card
-          },
-          submissions: @submissions
+      if @player
+        format.html # show.html.erb
+        format.json {
+          render json: {
+            game: @game.as_json(only: [:finished]), 
+            black_card: @game.black_card.as_json(only: [:num_blanks, :content]),
+            game_hand: @game.submissions.as_json(only: [:content, :user_id, :id]),
+            player_hand: @white_cards.as_json(only: [:content, :id]),
+            player: @player,
+            players: @game.users.collect { |u|
+              { email: u.email, submissions_left: u.hands.where(game_id: params[:id]).first.submissions_left }
+            }.as_json,
+            czar: {
+              email: @czar_user.email,
+              self: @czar
+            },
+            winner: {
+              email: @winning_player,
+              content: @winning_card
+            },
+            submissions: @submissions
+          }
         }
-      }
+      else
+        format.html { redirect_to games_path }
+        format.json { render json: { message: 'You have not joined this game' }, status: :error }
+      end
     end
   end
 
@@ -67,19 +70,15 @@ class GamesController < ApplicationController
   def hand
     @game = Game.find(params[:id])
     @card = WhiteCard.find(params[:card_id])
-    czar = current_user.id == @game.czar_id
 
-    if czar
-      @user_hand = @card.user.hands.where(game_id: @game.id).first
-      @user_hand.score += 1
-      @game.winning_card_id = @card.id
-      @game.save
-      @card.hand_id = nil
-      @card.save
+    if czar = (current_user.id == @game.czar_id)
+      @card.hand.update_attributes(score: @card.hand.score + 1)
+      @game.update_attributes(winning_card_id: @card.id)
+      @card.update_attributes(hand_id: nil)
     elsif @card.hand.submissions_left > 0
-      @user_hand = @card.hand
-      @card.hand = @game.hands.where(user_id: nil).first
-      @user_hand.submissions_left -= 1
+      @card.hand.update_attributes(submissions_left: @card.hand.submissions_left - 1)
+      @submission = Submission.new(user_id: current_user.id, 
+                                  game_id: @game.id, content: @card.content)
     else
       render json: {}, status: :unprocessable_entity
       return
@@ -91,13 +90,17 @@ class GamesController < ApplicationController
           @game.new_round!
           format.json { render json: {}, status: :ok }
         else
-          format.json { render json: {}, status: :unprocessable_entity }
+          format.json do 
+            render json: { message: 'There was an issue starting a new round.' }, status: :error
+          end
         end
       else
-        if @card.save && @user_hand.save
+        if @submission.save
           format.json { render json: {}, status: :ok }
         else
-          format.json { render json: {}, status: :unprocessable_entity }          
+          format.json do 
+            render json: { message: 'There was an issue saving your submitted card' }, status: :error
+          end
         end
       end
     end unless @game.finished

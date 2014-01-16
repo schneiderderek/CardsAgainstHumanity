@@ -2,23 +2,8 @@ CardsAgainstHumanity::Application.routes.draw do
   devise_for :users
 
   resources :games, except: [:edit, :update, :destroy] do
-    resources :users, only: [:index, :show] do 
-      resources :hands
-
-      member do
-        get 'hand'
-      end
-    end
-
-    member do
-      post 'hand'
-    end
-
-    resources :submissions, except: [:new, :update, :edit, :destroy] do 
-      collection do 
-        post 'submit'
-      end
-    end
+    resource :hand, except: [:edit, :update, :new]
+    resources :submissions, except: [:new, :update, :edit, :destroy], defaults: { format: :json }
   end
 
   # The priority is based upon order of creation:

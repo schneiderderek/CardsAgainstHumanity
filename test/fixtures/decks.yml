@@ -1,7 +1,6 @@
 default:
-   id: 1
    name: Default
 
-one:
-   id: 2
-   name: Deck 1
+default_in_game:
+  name: Default in game
+  game: default

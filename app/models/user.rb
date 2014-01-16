@@ -7,5 +7,6 @@ class User < ActiveRecord::Base
 
   has_many :hands, dependent: :destroy
   has_many :games, through: :hands
+  has_many :submissions
   has_many :decks
 end
