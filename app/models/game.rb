@@ -18,6 +18,7 @@ class Game < ActiveRecord::Base
   def initialize_game_components!
     self.deck.duplicate_for_game(self.original_deck_id)
     self.new_round!
+    self.round = 0
   end
 
   def new_round!
@@ -42,6 +43,8 @@ class Game < ActiveRecord::Base
         h.submissions_left = (h.user.nil? || h.user.id == self.czar_id) ? 0 : new_black_card.num_blanks
         h.save
       end
+
+      self.round += 1
 
       self.save
     end

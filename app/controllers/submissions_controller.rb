@@ -3,10 +3,11 @@ class SubmissionsController < ApplicationController
   respond_to :json
 
   def index
-    @submissions = Submission.where(game_id: params[:game_id])
+    @game = Game.find(params[:game_id])
+    @submissions = @game.submissions.where(round: @game.round).order(id: :asc)
 
     render json: {
-      submissions: @submissions,
+      submissions: @submissions.as_json(only: [:content]),
       message: 'Submissions list for game',
       status: :ok
       }, status: :ok
@@ -18,17 +19,42 @@ class SubmissionsController < ApplicationController
     respond_with @submission
   end
 
+  # POST
+  def submit
+    @submission = Submission.find(params[:id])
+    @game = @submission.game
+    @hand = @submission.hand
+
+    if current_user.id == @game.czar_id
+      @hand.update_attributes(score: @hand.score + 1)
+
+      unless @game.finished
+        @game.new_round!
+        render json: {}, status: :ok
+      end
+    else
+      render json: {
+        message: 'You are not the card czar',
+        status: 401
+        }, status: 401
+    end
+  end
+
   def create
     @submission = Submission.new
     @card = WhiteCard.find(params[:card_id])
     @hand = @card.hand
 
-    if @card.hand.user.id == current_user.id and @hand.submissions_left > 0
+    if @hand.user.id == current_user.id and @hand.submissions_left > 0
       @submission.content = @card.content
-      @submission.user_id = @hand.user.id
+      @submission.hand_id = @hand.id
       @submission.game_id = @hand.game.id
+      @submission.round = @hand.game.round
     else
-      render json: { message: 'You are not authorized to submit this card.', status: 401 }, status: 401
+      render json: { 
+        message: 'You are not authorized to submit this card.',
+        status: 401
+        }, status: 401
       return
     end
 

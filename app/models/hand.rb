@@ -1,6 +1,6 @@
 class Hand < ActiveRecord::Base
   attr_accessible :user, :game, :white_cards, :game_id, :user_id,
-                  :submissions_left
+                  :submissions_left, :score
 
   belongs_to :user # if user is nil then the hand belongs to the game
   belongs_to :game

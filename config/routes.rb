@@ -3,7 +3,11 @@ CardsAgainstHumanity::Application.routes.draw do
 
   resources :games, except: [:edit, :update, :destroy] do
     resource :hand, except: [:edit, :update, :new]
-    resources :submissions, except: [:new, :update, :edit, :destroy], defaults: { format: :json }
+    resources :submissions, except: [:new, :update, :edit, :destroy], defaults: { format: :json } do
+      collection do
+        post 'submit'
+      end
+    end
   end
 
   # The priority is based upon order of creation:

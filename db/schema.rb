@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20140114042053) do
+ActiveRecord::Schema.define(:version => 20140117041758) do
 
   create_table "black_cards", :force => true do |t|
     t.datetime "created_at", :null => false
@@ -38,7 +38,7 @@ ActiveRecord::Schema.define(:version => 20140114042053) do
     t.integer  "original_deck_id"
     t.integer  "czar_id"
     t.integer  "max_score",        :default => 10
-    t.integer  "winning_card_id"
+    t.integer  "round",            :default => 0
   end
 
   create_table "hands", :force => true do |t|
@@ -51,11 +51,12 @@ ActiveRecord::Schema.define(:version => 20140114042053) do
   end
 
   create_table "submissions", :force => true do |t|
-    t.integer  "user_id"
     t.integer  "game_id"
     t.string   "content"
     t.datetime "created_at", :null => false
     t.datetime "updated_at", :null => false
+    t.integer  "hand_id"
+    t.integer  "round"
   end
 
   create_table "users", :force => true do |t|

@@ -15,14 +15,19 @@ end
 
 group :development, :test do
   gem 'railroady'
-  gem 'rspec-rails'
   gem 'pry'
   gem 'pry-doc'
   gem 'pry-rails'
-  gem 'capybara'
   gem 'launchy'
-  gem 'factory_girl_rails'
   gem 'shoulda'
+end
+
+group :test do
+  gem 'capybara'
+  gem 'rspec-rails'
+  gem 'factory_girl_rails'
+  gem 'cucumber-rails'
+  gem 'vcr'
 end
 
 gem 'jquery-rails'
