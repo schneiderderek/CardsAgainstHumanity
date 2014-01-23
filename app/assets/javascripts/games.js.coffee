@@ -7,26 +7,29 @@ Game = {
     Board: {}
     Player: {}
     Round: {}
+    Intervals: {}
   }
 }
 
 Actions = Game.Actions
 Data = Game.Data
 Helpers = Game.Helpers
+Intervals = Data.Intervals
 
 Actions.refreshGame = () ->
   if /\/games\/[0-9]+$/.test(window.location.pathname)
     $.ajax
       url: document.URL + '.json',
       success: (board) ->
+        clearInterval(Intervals.gameRefresh) if Intervals.gameRefresh and Data.Board.game.round != board.game.round
         Data.Board = board
         # Data.Round = board.game.round 
         console.info("Game data recieved.")
+
         if not board.finished
           Actions.setBlackCard()
           Actions.setUserPoints(board.player.score)
           Actions.setCzarInfo(board.czar.self, board.czar.email)
-          Actions.setGameHand(board.player, board.czar.self, board.submissions)
 
           if board.czar.self
             if $('#player-hand h2').length is 0
@@ -38,20 +41,23 @@ Actions.refreshGame = () ->
             Actions.updatePlayerHand()
             Actions.showLastGameWinner(board.winner) 
 
-          if board.player.submissions_left == 0 and not board.czar.self
-            Actions.showLastRoundInfo(board.game_hand, board.winner)
         else
           console.info("The Game has finished.")
           Actions.endGame()
 
-Actions.setGameHand = (player, czar, hand) ->
+Actions.setGameHand = () ->
+  return false if Data.Board.board is null
+
+  czar = Data.Board.czar.self
+  hand = Data.Board.submissions
   $.ajax
     url: document.URL + "/submissions"
     success: (sub_data) ->
+      console.info("Submissions for game recived.")
       if czar
-        Helpers.generateCards(hand, 'white', 'game', czar)
+        currentNumSubmissions = $('#game-hand').children.length
+        Helpers.generateCards(hand.slice(currentNumSubmissions, hand.length), 'white', 'game', czar)
 
-        # $('#player-hand').empty()
         $('#game-content #game-hand .white-card.effect2').click ->
           if confirm("Are you sure you want to choose this card?")
             cardId = $(this).attr('card-id')
@@ -65,7 +71,7 @@ Actions.setGameHand = (player, czar, hand) ->
                 console.error("There seems to be an issue connecting to the server.\nPlease try refreshing the page.")
       else
         $('#game-hand').empty()
-        Helpers.generateCards(hand, 'white', 'game', czar) if player.submissions_left == 0
+        Helpers.generateCards(hand.slice(currentNumSubmissions, hand.length), 'white', 'game', czar) if Data.Board.player.submissions_left == 0
     error: ->
       console.error('Could not get submissions for game.')
 
@@ -91,7 +97,6 @@ Helpers.generateCard = (card, color, hand, czar) ->
   document.getElementById(hand + '-hand').appendChild(cardDiv)
 
 Helpers.generateCards = (cardArr, color, hand, czar) ->
-  $('#' + hand + '-hand').empty()
   Helpers.generateCard card, color, hand, czar for card in cardArr
 
 Actions.setUserPoints = (value) ->
@@ -122,7 +127,6 @@ Actions.updatePlayersWaiting = (players) ->
 
 Actions.updatePlayerWaiting = (players, player) ->
   for current in players
-    debugger
     return unless players[x].email == player.textContent
 
   player.remove()
@@ -148,10 +152,9 @@ Actions.updatePlayerHand = () ->
   $.ajax
     url: document.URL + '/hand'
     success: (playerHand) ->
-      hand = playerHand[0]
       console.info("Generating player hand cards...")
-      Helpers.generateCards(hand.white_cards, 'white', 'player', false)
-      if hand.submissions_left > 0
+      Helpers.generateCards(playerHand.white_cards, 'white', 'player', false)
+      if playerHand.submissions_left > 0
         $('#player-hand .white-card.effect2').click ->
           if confirm('Are you sure you want to choose this card?')
             cardId = $(this).attr('card-id')
@@ -161,10 +164,16 @@ Actions.updatePlayerHand = () ->
               success: ->
                 console.info('Card was successfully posted')
                 $('.white-card[card-id=' + cardId + ']').remove();
+                playerHand.submissions_left -= 1
+
+                if playerHand.submissions_left == 0
+                  Actions.showLastRoundInfo(Data.Board.submissions, Data.Board.winner) 
+                  Intervals.gameRefresh = setInterval(Actions.refreshGame, 1000)
               error: ->
                 console.error("Could not send card to server")
     error: ->
       console.error("Could not get hand data.")
 
 Actions.refreshGame()
-# setInterval(Actions.refreshGame, 1600)
+Intervals.gameHandRefresh = setInterval(Actions.setGameHand, 1200)
+

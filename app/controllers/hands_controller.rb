@@ -2,7 +2,7 @@ class HandsController < ApplicationController
   before_filter :authenticate_user!
 
   def show
-    @hand = Hand.where(game_id: params[:game_id], user_id: current_user.id)
+    @hand = Hand.where(game_id: params[:game_id], user_id: current_user.id).first
 
     render json: @hand.as_json(only: [:score, :submissions_left, :white_cards], include: [:white_cards => {only: [:content, :id]}])
   end
