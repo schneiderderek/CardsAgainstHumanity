@@ -28,6 +28,9 @@ group :test do
   gem 'factory_girl_rails'
   gem 'cucumber-rails'
   gem 'vcr'
+  gem 'railroady'
+  gem 'better_errors'
+  gem 'binding_of_caller'
 end
 
 gem 'jquery-rails'
