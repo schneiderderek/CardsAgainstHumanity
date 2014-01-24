@@ -7,7 +7,8 @@ class SubmissionsController < ApplicationController
     @submissions = @game.submissions.where(round: @game.round).order(id: :asc)
 
     render json: {
-      submissions: @submissions.as_json(only: [:content]),
+      submissions: @submissions.as_json(only: [:content, :id]),
+      czar: current_user.id == @game.czar_id,
       message: 'Submissions list for game',
       status: :ok
       }, status: :ok

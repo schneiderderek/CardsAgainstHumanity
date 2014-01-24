@@ -1,29 +1,20 @@
 window.modalWasShown = false
 
-Game = {
-  Actions: {}
-  Helpers: {}
-  Data: {
-    Board: {}
-    Player: {}
-    Round: {}
-    Intervals: {}
-  }
-}
-
-Actions = Game.Actions
-Data = Game.Data
-Helpers = Game.Helpers
-Intervals = Data.Intervals
+Actions = {}
+Helpers = {}
+Board = {}
+Intervals = {}
 
 Actions.refreshGame = () ->
   if /\/games\/[0-9]+$/.test(window.location.pathname)
     $.ajax
       url: document.URL + '.json',
       success: (board) ->
-        clearInterval(Intervals.gameRefresh) if Intervals.gameRefresh and Data.Board.game.round != board.game.round
-        Data.Board = board
-        # Data.Round = board.game.round 
+        if Intervals.gameRefresh and (Board.game.round != board.game.round)
+          clearInterval(Intervals.gameRefresh)
+          Intervals.gameRefresh = null
+
+        Board = board
         console.info("Game data recieved.")
 
         if not board.finished
@@ -46,37 +37,34 @@ Actions.refreshGame = () ->
           Actions.endGame()
 
 Actions.setGameHand = () ->
-  return false if Data.Board.board is null
-
-  czar = Data.Board.czar.self
-  hand = Data.Board.submissions
   $.ajax
     url: document.URL + "/submissions"
-    success: (sub_data) ->
+    success: (submission_data) ->
+      submissions = submission_data.submissions
+      czar = submission_data.czar
+      currentNumSubmissions = $('#game-hand')[0].children.length
       console.info("Submissions for game recived.")
       if czar
-        currentNumSubmissions = $('#game-hand').children.length
-        Helpers.generateCards(hand.slice(currentNumSubmissions, hand.length), 'white', 'game', czar)
+        Helpers.generateCards(submissions.slice(currentNumSubmissions, submissions.length), 'white', 'game', czar)
 
-        $('#game-content #game-hand .white-card.effect2').click ->
+        $('#game-content #game-hand .white-card.effect2').slice(currentNumSubmissions, submissions.length).click ->
           if confirm("Are you sure you want to choose this card?")
             cardId = $(this).attr('card-id')
             $.ajax
               url: document.URL + "/submissions/submit?id=" + cardId
               type: 'POST'
-              success: (select_data, select_textStatus, select_jqXHR) ->
+              success: () ->
                 $('#game-content #game-hand').empty()
                 Actions.refreshGame()
               error: ->
                 console.error("There seems to be an issue connecting to the server.\nPlease try refreshing the page.")
-      else
-        $('#game-hand').empty()
-        Helpers.generateCards(hand.slice(currentNumSubmissions, hand.length), 'white', 'game', czar) if Data.Board.player.submissions_left == 0
+      else if Board.player and (Board.player.submissions_left == 0)
+          Helpers.generateCards(submissions.slice(currentNumSubmissions, submissions.length), 'white', 'game', czar)
     error: ->
       console.error('Could not get submissions for game.')
 
 Actions.setBlackCard = () ->
-  bc = Data.Board.black_card
+  bc = Board.black_card
   cardDiv = $('#black-card')[0]
   cardDiv.textContent = bc.content + '\nPick ' + bc.num_blanks
   cardDiv.setAttribute('class', 'black-card effect2')
@@ -162,18 +150,21 @@ Actions.updatePlayerHand = () ->
               type: 'POST'
               url: document.URL + "/submissions?card_id=" + cardId
               success: ->
-                console.info('Card was successfully posted')
+                console.info('Card was successfully submitted')
                 $('.white-card[card-id=' + cardId + ']').remove();
                 playerHand.submissions_left -= 1
 
                 if playerHand.submissions_left == 0
-                  Actions.showLastRoundInfo(Data.Board.submissions, Data.Board.winner) 
+                  Actions.showLastRoundInfo(Board.submissions, Board.winner) 
                   Intervals.gameRefresh = setInterval(Actions.refreshGame, 1000)
               error: ->
                 console.error("Could not send card to server")
+      true
     error: ->
       console.error("Could not get hand data.")
 
+Helpers.getGameHand = () ->
+  $('#game-hand')
+
 Actions.refreshGame()
 Intervals.gameHandRefresh = setInterval(Actions.setGameHand, 1200)
-

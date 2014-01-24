@@ -44,8 +44,7 @@ class GamesController < ApplicationController
             winner: {
               email: @winning_player,
               cards: @winning_cards.as_json(only: [:content])
-            },
-            submissions: @submissions.as_json(only: [:content, :user_id, :id])
+            }
           }
         }
       else
