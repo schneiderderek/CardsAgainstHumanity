@@ -11,6 +11,8 @@ class Game < ActiveRecord::Base
   has_many :users, through: :hands
   has_many :submissions, dependent: :destroy
 
+  scope :available, -> { where(finished: false) }
+
   validates :name, :max_players, :deck, presence: true
 
   after_create :initialize_game_components!

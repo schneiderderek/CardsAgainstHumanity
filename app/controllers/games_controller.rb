@@ -4,7 +4,7 @@ class GamesController < ApplicationController
   # GET /games
   # GET /games.json
   def index
-    @games = Game.all.keep_if { |x| !x.finished }
+    @games = Game.available
 
     respond_to do |format|
       format.html # index.html.erb
@@ -22,7 +22,7 @@ class GamesController < ApplicationController
     @white_cards = @player.white_cards if @player and !@czar
 
     # Need to grab submissions corresponding to last round
-    @winning_cards = @game.submissions.where(round: @game.round - 1 )
+    @winning_cards = @game.submissions.where(round: @game.round - 1)
     @winning_player = @winning_cards.first.user.email if @winning_cards.length > 0
     @submissions = Submission.where(game_id: @game.id).order(id: :asc)
 
@@ -31,7 +31,7 @@ class GamesController < ApplicationController
         format.html # show.html.erb
         format.json {
           render json: {
-            game: @game.as_json(only: [:finished, :round]), 
+            game: @game.as_json(only: [:finished, :round]),
             black_card: @game.black_card.as_json(only: [:num_blanks, :content]),
             player: @player,
             players: @game.users.collect { |u|

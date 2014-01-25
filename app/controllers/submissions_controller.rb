@@ -8,7 +8,11 @@ class SubmissionsController < ApplicationController
 
     render json: {
       submissions: @submissions.as_json(only: [:content, :id]),
+      players: @game.users.collect { |u|
+              { email: u.email, submissions_left: u.hands.where(game_id: params[:game_id]).first.submissions_left }
+            }.as_json,
       czar: current_user.id == @game.czar_id,
+      round: @game.round,
       message: 'Submissions list for game',
       status: :ok
       }, status: :ok
