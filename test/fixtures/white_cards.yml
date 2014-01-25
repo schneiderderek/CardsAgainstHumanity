@@ -1,2 +1,16 @@
-one:
-   content: A white card
+# General
+white_card_1:
+  content: Content for white card 1
+  deck: default
+
+white_card_2:
+  content: Content for white card 2
+  deck: default
+
+white_card_1_game:
+  content: Content for white card 1 in game
+  deck: default_in_game
+
+white_card_2_game:
+  content: Content for white card 2 in game
+  deck: default_in_game

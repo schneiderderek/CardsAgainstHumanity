@@ -2,8 +2,9 @@ require 'test_helper'
 
 class GamesControllerTest < ActionController::TestCase
   setup do
-    @game = games(:one)
-    @deck = decks(:default)
+    @game = games(:default)
+    @game.update_attributes(czar_id: users(:default).id)
+    @deck = decks(:default_in_game)
     sign_in users(:default)
   end
 
@@ -20,14 +21,14 @@ class GamesControllerTest < ActionController::TestCase
 
   test "should create game" do
     assert_difference('Game.count') do
-      post :create, game: { name: "New Game", max_players: 20, deck: @deck }
+      post :create, game: { name: 'New Game', max_players: 20, deck: @deck }
     end
 
     assert_redirected_to game_path(assigns(:game))
   end
 
   test "should show game" do
-    get :show, id: @game
+    get :show, id: @game.id
     assert_response :success
   end
 end

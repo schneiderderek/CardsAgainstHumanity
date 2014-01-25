@@ -1,0 +1,4 @@
+default:
+  user: default
+  game: default
+  content: "CONTENT"

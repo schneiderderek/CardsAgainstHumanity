@@ -1,10 +1,44 @@
-one:
-   num_blanks: 2
-   content: Something _ and something else _
-   deck_id: 1
-   game_id: 1
+# General
+pick_one:
+  content: Pick _ some card.
+  deck: default
+  game: default
 
-two:
-   num_blanks: 1
+pick_two:
+   content: Something _ and something else _
+   deck: default
+   game: default
+
+pick_three:
+   content: Pick _, _, and _.
+   deck: default
+   game: default
+
+# Special Cases
+pick_one_no_blank:
    content: Something? 
-   deck_id: 1
+   deck: default
+   game: default
+
+# IN-GAME
+# General
+pick_one:
+  content: Pick _ some card.
+  deck: default_in_game
+  game: default
+
+pick_two:
+   content: Something _ and something else _
+   deck: default_in_game
+   game: default
+
+pick_three:
+   content: Pick _, _, and _.
+   deck: default_in_game
+   game: default
+
+# Special Cases
+pick_one_no_blank:
+   content: Something? 
+   deck: default_in_game
+   game: default

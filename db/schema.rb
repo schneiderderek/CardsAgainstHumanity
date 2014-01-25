@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20131125152606) do
+ActiveRecord::Schema.define(:version => 20140117041758) do
 
   create_table "black_cards", :force => true do |t|
     t.datetime "created_at", :null => false
@@ -30,7 +30,6 @@ ActiveRecord::Schema.define(:version => 20131125152606) do
   end
 
   create_table "games", :force => true do |t|
-    t.integer  "players",          :default => 0
     t.datetime "created_at",                          :null => false
     t.datetime "updated_at",                          :null => false
     t.string   "name",             :default => ""
@@ -38,8 +37,8 @@ ActiveRecord::Schema.define(:version => 20131125152606) do
     t.boolean  "finished",         :default => false
     t.integer  "original_deck_id"
     t.integer  "czar_id"
-    t.integer  "max_score"
-    t.integer  "winning_card_id"
+    t.integer  "max_score",        :default => 10
+    t.integer  "round",            :default => 0
   end
 
   create_table "hands", :force => true do |t|
@@ -49,6 +48,15 @@ ActiveRecord::Schema.define(:version => 20131125152606) do
     t.integer  "game_id"
     t.integer  "score",            :default => 0
     t.integer  "submissions_left", :default => 0
+  end
+
+  create_table "submissions", :force => true do |t|
+    t.integer  "game_id"
+    t.string   "content"
+    t.datetime "created_at", :null => false
+    t.datetime "updated_at", :null => false
+    t.integer  "hand_id"
+    t.integer  "round"
   end
 
   create_table "users", :force => true do |t|
@@ -64,7 +72,6 @@ ActiveRecord::Schema.define(:version => 20131125152606) do
     t.string   "last_sign_in_ip"
     t.datetime "created_at",                             :null => false
     t.datetime "updated_at",                             :null => false
-    t.integer  "game_id"
     t.integer  "wins",                   :default => 0
   end
 
@@ -77,7 +84,6 @@ ActiveRecord::Schema.define(:version => 20131125152606) do
     t.string   "content"
     t.integer  "deck_id"
     t.integer  "hand_id"
-    t.integer  "user_id"
   end
 
 end

@@ -4,7 +4,7 @@ class GamesController < ApplicationController
   # GET /games
   # GET /games.json
   def index
-    @games = Game.all.keep_if { |x| !x.finished }
+    @games = Game.available
 
     respond_to do |format|
       format.html # index.html.erb
@@ -17,40 +17,40 @@ class GamesController < ApplicationController
   def show
     @game = Game.find(params[:id])
     @czar = current_user.id == @game.czar_id
-    @czar_user = User.find(@game.czar_id)
-
-    if @czar
-      @white_cards = @game.hands.where(user_id: nil).first.white_cards
-    else
-      @white_cards = @game.hands.where(user_id: current_user.id).first.white_cards
-    end
-
+    @czar_user = @game.czar
     @player = @game.hands.where(user_id: current_user.id).first
-    @winning_card = WhiteCard.find(@game.winning_card_id).content if @game.winning_card_id
-    @winning_player = User.find(WhiteCard.find(@game.winning_card_id).user_id).email if @game.winning_card_id
+    @white_cards = @player.white_cards if @player and !@czar
+
+    # Need to grab submissions corresponding to last round
+    @winning_cards = @game.submissions.where(round: @game.round - 1)
+    @winning_player = @winning_cards.first.user.email if @winning_cards.length > 0
+    @submissions = Submission.where(game_id: @game.id).order(id: :asc)
 
     respond_to do |format|
-      format.html # show.html.erb
-      format.json {
-        render json: {
-          game: @game, 
-          black_card: @game.black_card.as_json(only: [:num_blanks, :content]),
-          game_hand: @game.hands.where(user_id: nil).first.white_cards.order('user_id ASC').as_json(only: [:content, :user_id, :id]),
-          player_hand: @white_cards.as_json(only: [:content, :id]),
-          player: @player,
-          players: @game.users.collect { |u|
-            { email: u.email, submissions_left: u.hands.where(game_id: params[:id]).first.submissions_left }
-          }.as_json,
-          czar: {
-            email: @czar_user.email,
-            self: @czar
-          },
-          winner: {
-            email: @winning_player,
-            content: @winning_card
+      if @player and not @game.finished
+        format.html # show.html.erb
+        format.json {
+          render json: {
+            game: @game.as_json(only: [:finished, :round]),
+            black_card: @game.black_card.as_json(only: [:num_blanks, :content]),
+            player: @player,
+            players: @game.users.collect { |u|
+              { email: u.email, submissions_left: u.hands.where(game_id: params[:id]).first.submissions_left }
+            }.as_json,
+            czar: {
+              email: @czar_user.email,
+              self: @czar
+            },
+            winner: {
+              email: @winning_player,
+              cards: @winning_cards.as_json(only: [:content])
+            }
           }
         }
-      }
+      else
+        format.html { redirect_to games_path }
+        format.json { render json: { message: 'You have not joined this game' }, status: :error }
+      end
     end
   end
 
@@ -63,46 +63,6 @@ class GamesController < ApplicationController
       format.html # new.html.erb
       format.json { render json: @game }
     end
-  end
-
-  # POST
-  def hand
-    @game = Game.find(params[:id])
-    @card = WhiteCard.find(params[:card_id])
-    czar = current_user.id == @game.czar_id
-
-    if czar
-      @user_hand = @card.user.hands.where(game_id: @game.id).first
-      @user_hand.score += 1
-      @game.winning_card_id = @card.id
-      @game.save
-      @card.hand_id = nil
-      @card.save
-    elsif @card.hand.submissions_left > 0
-      @user_hand = @card.hand
-      @card.hand = @game.hands.where(user_id: nil).first
-      @user_hand.submissions_left -= 1
-    else
-      render json: {}, status: :unprocessable_entity
-      return
-    end
-    
-    respond_to do |format|
-      if czar
-        if @user_hand.save
-          @game.new_round!
-          format.json { render json: {}, status: :ok }
-        else
-          format.json { render json: {}, status: :unprocessable_entity }
-        end
-      else
-        if @card.save && @user_hand.save
-          format.json { render json: {}, status: :ok }
-        else
-          format.json { render json: {}, status: :unprocessable_entity }          
-        end
-      end
-    end unless @game.finished
   end
 
   # POST /games
@@ -130,5 +90,4 @@ class GamesController < ApplicationController
   def self.operation_destroy
     Game.all.each { |g| g.destroy if ((Time.zone.now - g.updated_at).to_i / 1.day >= 14) || g.finished }
   end
-
 end
