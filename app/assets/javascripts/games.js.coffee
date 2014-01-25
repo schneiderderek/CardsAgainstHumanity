@@ -142,7 +142,7 @@ Actions.updatePlayerHand = () ->
   $.ajax
     url: document.URL + '/hand'
     success: (playerHand) ->
-      console.info("Generating player hand cards...")
+      console.info('Generating player hand cards...')
       currentNumCard = $('#player-hand')[0].children.length
       cards = playerHand.white_cards
       Helpers.generateCards(cards.slice(currentNumCard, cards.length), 'white', 'player', false)
@@ -152,7 +152,7 @@ Actions.updatePlayerHand = () ->
             cardId = $(this).attr('card-id')
             $.ajax
               type: 'POST'
-              url: document.URL + "/submissions?card_id=" + cardId
+              url: document.URL + '/submissions?card_id=' + cardId
               success: ->
                 console.info('Card was successfully submitted')
                 $('.white-card[card-id=' + cardId + ']').remove();
