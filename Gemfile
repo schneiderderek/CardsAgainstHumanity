@@ -28,7 +28,6 @@ group :test do
   gem 'factory_girl_rails'
   gem 'cucumber-rails'
   gem 'vcr'
-  gem 'railroady'
   gem 'better_errors'
   gem 'binding_of_caller'
 end
@@ -48,7 +47,7 @@ gem 'jquery-cookie-rails'
 # gem 'unicorn'
 
 # Deploy with Capistrano
-# gem 'capistrano'
+gem 'capistrano'
 
 # To use debugger
 # gem 'debugger'
