@@ -24,9 +24,7 @@ Actions.refreshGame = () ->
         else
           Actions.updatePlayerHand()
           Actions.showLastGameWinner(board.winner)
-
       else
-        console.info("The Game has finished.")
         Actions.endGame()
 
 Actions.resetBoard = () ->
@@ -42,7 +40,7 @@ Actions.setGameHand = () ->
       czar = submission_data.czar
       currentNumSubmissions = $('#game-hand')[0].children.length
       console.info("Submissions for game recived.")
-      if Board.game.round == submission_data.round 
+      if Board.game.round == submission_data.round
         if czar
           Helpers.generateCards(submissions.slice(currentNumSubmissions, submissions.length), 'white', 'game', czar)
           Actions.updatePlayersWaiting(submission_data.players)
@@ -95,6 +93,7 @@ Actions.setCzarInfo = (self, name) ->
   $('#status-czar')[0].textContent = if self then "YOU ARE THE CZAR" else name
 
 Actions.endGame = () ->
+  console.info("The Game has finished.")
   $('#game-content').empty()
   $('#player-hand').empty()
 
@@ -158,6 +157,7 @@ Actions.updatePlayerHand = () ->
                 console.info('Card was successfully submitted')
                 $('.white-card[card-id=' + cardId + ']').remove();
                 playerHand.submissions_left -= 1
+                Board.player.submissions_left -= 1
 
                 if playerHand.submissions_left == 0
                   Actions.showLastRoundInfo(Board.submissions, Board.winner) 
