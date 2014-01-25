@@ -119,9 +119,8 @@ Actions.updatePlayersWaiting = (players) ->
 
 Actions.updatePlayerWaiting = (players, player) ->
   for current in players
-    return unless current.email == player.textContent
-
-  player.remove()
+    if (current.email == player.textContent) and (current.submissions_left == 0)
+      player.remove()
 
 Actions.showPlayerWaiting = (list, player) ->
   if player.submissions_left > 0
