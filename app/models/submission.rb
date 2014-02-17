@@ -1,9 +1,11 @@
 class Submission < ActiveRecord::Base
-  attr_accessible :hand_id, :game_id, :content 
+  attr_accessible :hand_id, :game_id, :content
 
   belongs_to :game
   belongs_to :hand
+  belongs_to :content
 
+  validates :content, presence: true
   validate :user_and_game_valid
 
   def user_and_game_valid

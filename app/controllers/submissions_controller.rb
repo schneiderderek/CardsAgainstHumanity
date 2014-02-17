@@ -7,7 +7,7 @@ class SubmissionsController < ApplicationController
     @submissions = @game.submissions.where(round: @game.round).order(id: :asc)
 
     render json: {
-      submissions: @submissions.as_json(only: [:content, :id]),
+      submissions: @submissions.as_json(only: :id, include: {content: {only: :text}}),
       players: @game.users.collect { |u|
               { email: u.email, submissions_left: u.hands.where(game_id: params[:game_id]).first.submissions_left }
             }.as_json,
@@ -56,7 +56,7 @@ class SubmissionsController < ApplicationController
       @submission.game_id = @hand.game.id
       @submission.round = @hand.game.round
     else
-      render json: { 
+      render json: {
         message: 'You are not authorized to submit this card.',
         status: 401
         }, status: 401
@@ -65,14 +65,14 @@ class SubmissionsController < ApplicationController
 
     if @submission.save && @card.destroy
       @hand.update_attributes(submissions_left: @hand.submissions_left - 1)
-      render json: { 
-        message: 'The submission was successfully saved.', 
+      render json: {
+        message: 'The submission was successfully saved.',
         status: 200,
         submission: @submission
         }, status: :ok
     else
-      render json: { 
-        message: 'The submission could not be saved.', 
+      render json: {
+        message: 'The submission could not be saved.',
         status: :error
         },  status: :error
     end

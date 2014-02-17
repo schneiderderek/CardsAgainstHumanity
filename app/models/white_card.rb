@@ -4,6 +4,7 @@ class WhiteCard < ActiveRecord::Base
   belongs_to :deck
   belongs_to :hand
   belongs_to :user
+  belongs_to :content
 
   validates :content, presence: true
   validate :deck_or_hand

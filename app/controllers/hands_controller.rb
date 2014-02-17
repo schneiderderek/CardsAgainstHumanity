@@ -4,7 +4,7 @@ class HandsController < ApplicationController
   def show
     @hand = Hand.where(game_id: params[:game_id], user_id: current_user.id).first
 
-    render json: @hand.as_json(only: [:score, :submissions_left, :white_cards], include: [:white_cards => {only: [:content, :id]}])
+    render json: @hand.as_json(only: [:score, :submissions_left, :white_cards], include: [:white_cards => {only: :id, include: {content: {only: :text}}}])
   end
 
   def create

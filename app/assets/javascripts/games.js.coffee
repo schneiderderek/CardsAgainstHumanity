@@ -65,14 +65,14 @@ Actions.setGameHand = () ->
 Actions.setBlackCard = () ->
   bc = Board.black_card
   cardDiv = $('#black-card')[0]
-  cardDiv.textContent = bc.content + '\nPick ' + bc.num_blanks
+  cardDiv.textContent = bc.content.text + '\nPick ' + bc.num_blanks
   cardDiv.setAttribute('class', 'black-card effect2')
 
   $('#game-content')[0].insertBefore(cardDiv, document.getElementById('game-content').firstChild)
 
 Helpers.generateCard = (card, color, hand, czar) ->
   cardDiv = document.createElement('div')
-  cardDiv.textContent = card.content
+  cardDiv.textContent = card.content.text
   cardDiv.setAttribute('class', color + '-card effect2')
   cardDiv.setAttribute('card-id', card['id'])
 
@@ -113,7 +113,7 @@ Actions.showPlayersWaiting = (players) ->
 Actions.updatePlayersWaiting = (players) ->
   console.info("Update Players Waiting")
   list = $('#player-hand ul.list-group')[0]
-  if list 
+  if list
     Actions.updatePlayerWaiting players, player for player in list.children
 
 Actions.updatePlayerWaiting = (players, player) ->
@@ -160,7 +160,7 @@ Actions.updatePlayerHand = () ->
                 Board.player.submissions_left -= 1
 
                 if playerHand.submissions_left == 0
-                  Actions.showLastRoundInfo(Board.submissions, Board.winner) 
+                  Actions.showLastRoundInfo(Board.submissions, Board.winner)
               error: ->
                 console.error("Could not send card to server")
     error: ->

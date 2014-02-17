@@ -3,7 +3,8 @@ class BlackCard < ActiveRecord::Base
   attr_readonly :num_blanks
 
   belongs_to :deck
-  belongs_to :game 
+  belongs_to :game
+  belongs_to :content
 
   before_validation :set_num_blanks!
 
@@ -17,8 +18,8 @@ class BlackCard < ActiveRecord::Base
 
   private
   def validate_content
-    self.content.split(/ /).each do |s| 
-      if s.count('_') > 1 
+    self.content.text.split(/ /).each do |s|
+      if s.count('_') > 1
         errors.add(:content, 'content does not match black card format')
         return false
       end
@@ -27,7 +28,7 @@ class BlackCard < ActiveRecord::Base
 
   def set_num_blanks!
     self.num_blanks = 0
-    self.content.split(/ /).each { |s| self.num_blanks += 1 if s.count('_') > 0 }
+    self.content.text.split(/ /).each { |s| self.num_blanks += 1 if s.count('_') > 0 }
     self.num_blanks = 1 if self.num_blanks == 0
   end
 end

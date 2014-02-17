@@ -11,15 +11,21 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20140117041758) do
+ActiveRecord::Schema.define(:version => 20140210022034) do
 
   create_table "black_cards", :force => true do |t|
     t.datetime "created_at", :null => false
     t.datetime "updated_at", :null => false
     t.integer  "num_blanks"
-    t.string   "content"
     t.integer  "deck_id"
     t.integer  "game_id"
+    t.integer  "content_id"
+  end
+
+  create_table "contents", :force => true do |t|
+    t.string   "text"
+    t.datetime "created_at", :null => false
+    t.datetime "updated_at", :null => false
   end
 
   create_table "decks", :force => true do |t|
@@ -52,11 +58,11 @@ ActiveRecord::Schema.define(:version => 20140117041758) do
 
   create_table "submissions", :force => true do |t|
     t.integer  "game_id"
-    t.string   "content"
     t.datetime "created_at", :null => false
     t.datetime "updated_at", :null => false
     t.integer  "hand_id"
     t.integer  "round"
+    t.integer  "content_id"
   end
 
   create_table "users", :force => true do |t|
@@ -81,9 +87,9 @@ ActiveRecord::Schema.define(:version => 20140117041758) do
   create_table "white_cards", :force => true do |t|
     t.datetime "created_at", :null => false
     t.datetime "updated_at", :null => false
-    t.string   "content"
     t.integer  "deck_id"
     t.integer  "hand_id"
+    t.integer  "content_id"
   end
 
 end

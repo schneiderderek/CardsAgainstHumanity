@@ -1,6 +1,6 @@
 class GamesController < ApplicationController
   before_filter :authenticate_user!
-  
+
   # GET /games
   # GET /games.json
   def index
@@ -32,7 +32,7 @@ class GamesController < ApplicationController
         format.json {
           render json: {
             game: @game.as_json(only: [:finished, :round]),
-            black_card: @game.black_card.as_json(only: [:num_blanks, :content]),
+            black_card: @game.black_card.as_json(only: :num_blanks, include: {content: {only: :text}}),
             player: @player,
             players: @game.users.collect { |u|
               { email: u.email, submissions_left: u.hands.where(game_id: params[:id]).first.submissions_left }
@@ -43,7 +43,7 @@ class GamesController < ApplicationController
             },
             winner: {
               email: @winning_player,
-              cards: @winning_cards.as_json(only: [:content])
+              cards: @winning_cards.as_json(include: {content: {only: :text}})
             }
           }
         }

@@ -11,7 +11,7 @@ class Hand < ActiveRecord::Base
   after_save :end_game
 
   def populate_hand!
-    self.game.deck.white_cards.to_a.sample(10 - self.white_cards.count).each do |card| 
+    self.game.deck.white_cards.to_a.sample(10 - self.white_cards.count).each do |card|
       card.update_attributes(deck: nil, hand: self)
     end if self.user_id
   end
