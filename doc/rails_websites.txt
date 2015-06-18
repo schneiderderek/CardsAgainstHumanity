@@ -1,3 +1,0 @@
-http://www.sitepoint.com/10-ruby-on-rails-best-practices/
-http://guides.rubyonrails.org/v3.2.14/
-
